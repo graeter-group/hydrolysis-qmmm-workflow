@@ -1293,7 +1293,7 @@ def analyse_break_proton_distances(force: bool = False) -> None:
         if Path(target).exists() and not force:
             logger.info(f"Skipping {target} as it already exists.")
             continue
-        cmd = f"gmx pairdist -f {job}.xtc -s {job}.tpr -ref -sf protdist-o.sel -sel -sf protdist-h.sel -refgrouping none -selgrouping none -o {target}"
+        cmd = f"gmx pairdist -f {job}.xtc -s {job}.tpr -ref -sf {refpath} -sel -sf {selpath} -refgrouping none -selgrouping none -o {target}"
         logger.info(f"Running pairdist")
         try:
             sh(cmd, quiet=0)
