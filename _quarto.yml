@@ -28,6 +28,7 @@ author: Jannik Buhr
 bibliography: references.bib
 code-fold: true
 toc: true
+engine: jupyter
 execute:
   warning: false
   cache: false

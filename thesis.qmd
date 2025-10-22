@@ -105,6 +105,10 @@ result = dr.execute(
 )
 ```
 
+```{python}
+dr.visualize_execution(final_vars=final_vars)
+```
+
 # Results
 
 ```{python}

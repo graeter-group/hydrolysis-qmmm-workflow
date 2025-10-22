@@ -1,6 +1,6 @@
 
 preview:
-	quarto preview thesis.qmd
+	quarto preview
 
 fix:
 	chmod -R +rw docs
