@@ -1,0 +1,108 @@
+integrator  = md
+dt          = 0.0002       ; 0.2 fs
+tinit       = 0
+nsteps      = 100       ; 0.02 ps
+nstcomm     = 100
+nstcalcenergy = 100
+; Output parameters
+nstlog      = 10
+nstxout     = 100
+nstvout     = 100
+nstfout     = 100
+nstxtcout   = 1
+nstenergy   = 100
+; Bond parameters
+
+; constraints             = none ; time step is short enough
+constraints             = h-bonds
+constraint_algorithm    = lincs
+lincs-iter = 2       ; (1) more accuary for double precision calculations
+lincs-order = 6      ; (4) also for double precision
+lincs-warnangle = 90 ; (30) essentially ignoring lincs warnings
+
+; Single-range cutoff scheme
+cutoff-scheme   = Verlet
+nstlist         = 20 
+rlist           = 1.4
+rcoulomb        = 1.4
+rvdw            = 1.4
+; PME electrostatics parameters
+coulombtype     = PME
+fourierspacing  = 0.12
+fourier_nx      = 0
+fourier_ny      = 0
+fourier_nz      = 0
+pme_order       = 4
+ewald_rtol      = 1e-5
+Tcoupl      = v-rescale
+tc_grps     = System
+tau_t       = 0.2
+ref_t       = 310
+; Pressure coupling is off for qmmm
+Pcoupl          = no
+refcoord_scaling = com
+; Generate velocities is off
+gen_vel     = no 
+pbc     = xyz
+; Long-range dispersion correction
+DispCorr    = EnerPres
+
+; Pull code
+pull                    = yes
+pull-nstxout            = 1
+pull-nstfout            = 1
+pull-ncoords            = 4
+pull-ngroups            = 5
+
+pull-group1-name        = NTERM
+pull-group2-name        = CTERM
+
+; equilibration tension
+pull-coord1-groups      = 0 1
+pull-coord1-type        = constant-force 
+pull-coord1-geometry    = direction
+pull-coord1-dim         = N N Y
+pull-coord1-vec         = 0 0 1
+pull-coord1-start       = yes
+pull-coord1-k           = -${EXTERNAL_FORCE}  ; kJ mol^-1 nm^-2
+
+pull-coord2-groups      = 0 2
+pull-coord2-type        = constant-force 
+pull-coord2-geometry    = direction
+pull-coord2-dim         = N N Y
+pull-coord2-vec         = 0 0 1
+pull-coord2-start       = yes
+pull-coord2-k           = ${EXTERNAL_FORCE}  ; kJ mol^-1 nm^-2
+
+pull-group3-name        = C_CARBONYL
+pull-group4-name        = O_OH
+
+pull-coord3-groups      = 3 4 ; C_CARBONYL - O
+pull-coord3-geometry    = distance
+pull-coord3-start       = yes
+pull-coord3-dim         = Y Y Y
+pull-coord3-k           = 40000  ; kJ mol^-1 nm^-2
+pull-coord3-rate        = 0  ; nm/ps
+pull-coord3-type        = umbrella
+
+; (gently) keep qm waters close
+pull-group5-name        = QWOH
+
+pull-coord4-groups      = 3 5 ; C_CARBONYL - QW and OH (for constant qm water pressure as oh comes closer)
+pull-coord4-geometry    = distance
+pull-coord4-start       = yes
+pull-coord4-dim         = Y Y Y
+pull-coord4-k           = 500  ; kJ mol^-1 nm^-2
+pull-coord4-rate        = 0 ; don't move away ; nm/ps
+pull-coord4-type        = umbrella
+
+; CP2K QMMM parameters
+qmmm-cp2k-active              = true   ; Activate QMMM MdModule
+qmmm-cp2k-qmgroup             = QMAtoms; Index group of QM atoms
+qmmm-cp2k-qmmethod            = INPUT    ; Method to use
+qmmm-cp2k-qmcharge            = ${CHARGE}      ; Charge of QM system
+qmmm-cp2k-qmmultiplicity      = 1      ; Multiplicity of QM system
+qmmm-cp2k-qmfilenames         = ${PREFIX}_cp2k
+
+${ROTATION_RESTRAINTS}
+

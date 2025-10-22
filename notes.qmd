@@ -1,0 +1,5 @@
+
+# TODO
+
+- what about second closest proton distances to O?
+- protonation analysis for wetbreak

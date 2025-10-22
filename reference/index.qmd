@@ -1,0 +1,9 @@
+# Function reference {.doc .doc-index}
+
+## Parsing
+
+Functions to inspect docstrings.
+
+| | |
+| --- | --- |
+| [parsing](parsing.qmd#src.parsing) |  |

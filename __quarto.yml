@@ -1,0 +1,97 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - "*.qmd"
+    - "!analysis/archive/"
+
+format:
+  html:
+    code-fold: true
+    code-tools:
+      source: repo
+    toc: true
+    toc-depth: 5
+    toc-expand: true
+    mainfont: Roboto
+    number-depth: 0
+    highlight-style: arrow
+    theme:
+      light:
+      - www/theme.scss
+      dark:
+      - www/theme.scss
+      - www/theme-dark.scss
+    code-copy: true
+
+author: Jannik Buhr
+bibliography: references.bib
+code-fold: true
+toc: true
+execute:
+  warning: false
+  cache: false
+  freeze: true
+
+website:
+  title: QM/MM Simulations of Collagen Hydrolysis
+  repo-url: https://github.com/graeter-group/hydrolysis-qmmm-workflow
+  repo-actions: [edit, issue]
+  reader-mode: true
+  search: true
+  page-navigation: true
+  back-to-top-navigation: true
+  page-footer:
+    left: "Computational Collagen Hydrolysis, Jannik Buhr"
+    right: 
+      - icon: github
+        href: https://github.com/jmbuhr
+      - icon: youtube
+        href: https://youtube.com/@jmbuhr 
+    background: light
+  navbar:
+    background: light
+    tools:
+      - icon: github
+        href: https://github.com/graeter-group/hydrolysis-qmmm-workflow
+    # left:
+    #   - href: index.qmd
+    #     text: Home
+  sidebar:
+    style: "floating"
+    collapse-level: 1
+    contents:
+    - href: index.qmd
+      text: Home
+    - href: thesis.qmd
+      text: Analysis
+    - reference/index.qmd
+    - contents:
+      - reference/parsing.qmd
+      section: Parsing
+
+
+filters:
+  - interlinks
+
+interlinks:
+  fast: true
+  sources:
+    numpy:
+      url: https://numpy.org/doc/stable/
+    python:
+      url: https://docs.python.org/3.10/
+
+quartodoc:
+  style: pkgdown
+  dir: reference
+  render_interlinks: true
+  sidebar: _sidebar.yml # manually included in sidebar here
+  options:
+    children: embedded
+  package: src
+  sections:
+    - title: Parsing
+      desc: Functions to inspect docstrings.
+      contents:
+        - parsing

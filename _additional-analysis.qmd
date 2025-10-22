@@ -1,0 +1,306 @@
+---
+title: Automated Hydrolysis
+author: Jannik Buhr
+format:
+  html:
+    code-fold: true
+engine: jupyter
+execute:
+  eval: false
+  echo: true
+  warning: false
+bibliography: references.bib
+---
+
+## Setup
+
+```{python}
+from copy import deepcopy
+from functools import reduce
+from itertools import product
+from subprocess import CalledProcessError
+from src.settings import derive_env_dirs
+import src.steps as st
+from src.utils import get_job_status, pp, clean_all, pushd, read_env, sh, show_job_finished, show_job_ids, write_env
+import src.operations as op
+import src.utils as ut
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+from kimmdy.parsing import read_top, write_top
+from multiprocessing import Pool
+import numpy as np
+import logging
+
+ut.activate_mpl()
+st.setup()
+logger = logging.getLogger("qm")
+
+envs = st.setup_envs()
+pool = Pool(8)
+env = envs[0]
+```
+
+# Scratchpad
+
+## vis us
+
+```{python}
+def center(opts):
+  env, job, frame, frame_index, system, t = opts
+  conf_job = f"{job}-conf-{t}"
+  try:
+    op.center_xtc(env, system, frame_index, trj=conf_job, job=conf_job, force=False)
+  except Exception:
+    pass
+
+def run(env, job, frame, frame_index, system):
+  frame_env = ut.read_env(env[f'{system}_dir'] + f'/frame-{frame}')
+  assert frame_env
+  ts = frame_env[f"{job}-config-times"]
+  inputs = [(env, job, frame, frame_index, system, t) for t in ts]
+  # results = pool.map(center, inputs)
+  for input in inputs:
+    center(input)
+
+run(envs[2], 'wethyd', 97, -4, 'single')
+run(envs[2], 'wethyd', 96, -5, 'triple')
+
+run(envs[3], 'hyd', 96, -5, 'single')
+run(envs[3], 'hyd', 97, -4, 'triple')
+
+run(envs[2], 'hyd', 100, -1, 'single')
+run(envs[2], 'hyd', 100, -1, 'triple')
+```
+
+```{python}
+def vis(env, job, frame, system, i_t):
+  frame_index = frame - 100 - 1
+  frame_env = ut.read_env(env[f'{system}_dir'] + f'/frame-{frame}')
+  assert frame_env
+  ts = frame_env[f"{job}-config-times"]
+  ds = frame_env[f"{job}-config-ds"]
+  ts_ds = list(zip(ts, ds))
+  ts = [t for t,d in sorted(ts_ds, key=lambda x: float(x[1]), reverse=True)]
+  t = ts[i_t]
+  conf_job = f"{job}-conf-{t}"
+  op.vis_job(env, system, frame_index, trj=conf_job, job=conf_job, open=True)
+```
+
+
+```{python}
+vis(envs[2], 'hyd', 100, 'single', 0)
+vis(envs[2], 'hyd', 100, 'single', -2)
+vis(envs[2], 'hyd', 100, 'single', 9)
+```
+
+```{python}
+vis(envs[2], 'wethyd', 97, 'single', 0)
+vis(envs[2], 'wethyd', 96, 'triple', 0)
+vis(envs[2], 'wethyd', 97, 'single', -1)
+vis(envs[2], 'wethyd', 96, 'triple', -1)
+```
+
+## Protonation
+
+CONT
+
+```{python}
+env = envs[2]
+hydjob = 'wethyd'
+system = 'single'
+frame = 97
+```
+
+
+```{python}
+env = envs[2]
+job = 'wetprot'
+system = 'single'
+frame = 97
+frame_index = -4
+```
+
+```{python}
+op.center_xtc(env, system, frame_index, trj=job, job=job, force=False)
+op.vis_job(env, system, frame_index, trj=job, job=job, open=True)
+```
+
+
+## b3lpy
+
+also with b3lyp.
+
+tips: <https://docs.bioexcel.eu/2021-04-22-qmmm-gromacs-cp2k/15-cp2k/index.html>
+
+```{python}
+env = envs[2]
+st.setup_hyds(env, job="hyd-lincs", lincs=True, force=True)
+st.start_hyds(env, job="hyd-lincs")
+st.setup_hyds(env, job="hyd", force=True)
+st.start_hyds(env, job="hyd")
+```
+
+Cutoff calculations
+
+```{python}
+# force_eval.dft.mgrid.cutoff, # total energy
+energies = [
+(450, )
+]
+```
+
+According to analysis, ix 1473-1475 with frame 100 (index -1) worked
+for triple and single.
+
+### analysis
+
+- Get distances from O of OH to C of peptide bond
+and the closest H of the protein.
+- Get length of simulation
+- Get timestep from mdp file
+- get energy xvgs
+- center for visualization
+
+
+```{python}
+env = envs[0]
+job = 'wethyd'
+system='single'
+frame_index = -1
+tmp_env = deepcopy(env)
+archive_path = "archive/hyd-0.1fs"
+tmp_env = derive_env_dirs(tmp_env, archive_path)
+
+op.center_xtc(tmp_env, system=system, frame_index=frame_index, trj=job, job=job)
+op.vis_job(tmp_env, system=system, frame_index=frame_index, trj=job, job=job, open=True)
+```
+
+
+```{python}
+job = 'hyd'
+env = envs[0]
+op.center_xtcs(env, job, job)
+```
+
+```{python}
+env = envs[3]
+job = 'wethyd'
+op.vis_job(env, system='single', frame_index=-1, trj=job, job=job, open=True)
+```
+
+
+## Analyse
+
+### Force equilibration, Slinky Theory
+
+hypothesis
+: peptide bonds are angled in such a way
+that they are not very accessible for water
+molecules aroud the triplehelix because of 
+the steep angle of the turn.
+
+This should be more pronounced a) in equilibrium / 
+under less force and b) for the single peptide vs.
+the triple helix.
+
+
+```{python}
+import MDAnalysis as mda
+import os
+from math import degrees
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn.objects as so
+from tqdm import tqdm
+
+root = os.getcwd()
+
+
+fdirs = set()
+for env in envs:
+  fdir = env['force_dir']
+  fdirs.add(fdir)
+
+env = envs[0]
+```
+
+```{python}
+def get_universe_angles(u):
+  nterm = u.select_atoms('resname ACE and name CH3').center(weights=None)
+  cterm = u.select_atoms('resname NME and name CH3').center(weights=None)
+  axis = cterm - nterm
+
+  cs = u.select_atoms('not (resname ACE) and not (resname NME) and name C')
+  ns = u.select_atoms('not (resname ACE ) and not (resname NME) and name N')
+  # remove c of last residue before NME and n of first residue after ACE
+  # to avoid spanning chains
+  aces = u.select_atoms('resname ACE and name C').resids
+  nmes = u.select_atoms('resname NME and name N').resids
+
+  x = u.select_atoms('resname NME')
+
+
+  angles = []
+
+  for i in range(len(cs)-1):
+    c = cs[i].position
+    n = ns[i+1].position
+    peptide_bond = n - c
+
+    angle = degrees(np.arccos(np.dot(axis, peptide_bond) / (np.linalg.norm(axis) * np.linalg.norm(peptide_bond))))
+    angles.append(angle)
+
+  return angles
+
+
+def get_all_angles(system):
+  name = f"{system}-eq"
+  gro = f"{name}.gro"
+  trj = f"{name}.xtc"
+  u = mda.Universe(gro, trj)
+  all_angles = []
+  for ts in tqdm(u.trajectory):
+    angles = get_universe_angles(u)
+    all_angles.append(angles)
+  return all_angles
+
+def plot_all_angles(all_angles, title, system):
+  df = pd.DataFrame(all_angles)
+  df['frame'] = df.index
+  df = df.melt(id_vars='frame', var_name='bond', value_name='angle')
+  if system == 'triple':
+    color = 'blue'
+  else:
+    color = 'orange'
+
+  p = (
+    so.Plot(df, x='frame', y='angle')
+    .add(so.Dot(color=color))
+    .add(so.Line(color='black'), so.Agg('mean'))
+    .label(title=title)
+  )
+  return p
+```
+
+```{python}
+ps = []
+for fdir in iter(fdirs):
+  print(fdir)
+  for system in ['chain-a', 'triple']:
+    print(system)
+    os.chdir(fdir)
+    angles = get_all_angles(system)
+    title = fdir.split('/')[-1] + ' ' + system
+    p = plot_all_angles(angles, title=title, system=system)
+    ps.append(p)
+    os.chdir(root)
+```
+
+```{python}
+plt.close('all')
+for p in ps:
+  p.plot(pyplot=True)
+plt.show()
+```
+

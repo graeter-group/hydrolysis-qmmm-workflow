@@ -1,0 +1,56 @@
+
+; from charmm36-jul2022.ff
+; http://mackerell.umaryland.edu/charmm_ff.shtml#gromacs
+;hydroxide ion by adm.jr.
+
+
+; ions.itp
+[ moleculetype ]
+; molname  nrexcl
+OH         3
+
+[ atoms ]
+; id    at type     res nr  res name   at name  cg nr  charge    mass
+  1     OX          1      OH         O1       1      -1.320    15.99940
+  2     HX          1      OH         H1       1       0.320     1.00800 ; qtot = -1.000000
+
+[ bonds ]
+;       aj     funct
+; 1       2      1
+1       2      5
+
+; use funct 5 (= no bond)
+
+
+
+; ffbonded.itp
+[ bondtypes ]
+  OX HX         1   0.09700000    456056.00 ; hydroxide ion
+
+
+; residuetypes
+OH Ion
+
+; solvent.rtp -> aminoacids.rtp
+[ OH ]
+  [ atoms ]
+       O1       OX -1.3200   1
+       H1       HX  0.3200   1
+  [ bonds ]
+       O1    H1
+
+
+
+; atomtypes.atp
+HX                 1.00800 ; hydroxide hydrogen
+OX                15.99940 ; hydroxide oxygen
+
+
+
+
+
+; ffnonbonded.itp
+[ atomtypes ]
+HX           1     1.008000    0.000     A  0.040001352445  0.1924640  ; hydroxide hydrogen
+OX           8    15.999400    0.000     A  0.302905564168  0.5020800  ; hydroxide oxygen
+

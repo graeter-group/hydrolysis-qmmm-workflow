@@ -1,0 +1,223 @@
+&GLOBAL
+  PRINT_LEVEL LOW
+  PROJECT PROJECT_NAME_PLACEHOLDER
+  RUN_TYPE ENERGY_FORCE
+&END GLOBAL
+&FORCE_EVAL
+  METHOD QMMM
+  &DFT
+    &PRINT
+      # &MO_CUBES ON
+      #   NHOMO 1
+      #   NLUMO 1
+      # &END MO_CUBES
+      # &ELF_CUBE ON
+      # &END ELF_CUBE
+      # &E_DENSITY_CUBE ON
+      # &END E_DENSITY_CUBE
+      # &EXTERNAL_POTENTIAL_CUBE ON
+      # &END EXTERNAL_POTENTIAL_CUBE
+    &END PRINT
+    # charge and multiplicity
+    # will be filled from the reference that in turn gets it form the mdp, which gets it from the env
+    CHARGE -1
+    MULTIPLICITY 1
+    # BASIS_SET_FILE_NAME  def2-tzvpd.1.cp2k
+    # BASIS_SET_FILE_NAME  def2-svpd.1.cp2k
+    # POTENTIAL_FILE_NAME  ALL_POTENTIALS
+    # BASIS_SET_FILE_NAME  BASIS_MOLOPT
+    # POTENTIAL_FILE_NAME  POTENTIAL
+    BASIS_SET_FILE_NAME  ALL_BASIS_SETS
+    POTENTIAL_FILE_NAME  POTENTIAL
+    &MGRID
+      NGRIDS 5
+      CUTOFF 450
+      REL_CUTOFF 50
+      COMMENSURATE
+    &END MGRID
+    &SCF
+      SCF_GUESS RESTART
+      EPS_SCF 5.0E-8
+      MAX_SCF 20
+      &OT  T
+        MINIMIZER  DIIS
+        STEPSIZE   0.15
+        PRECONDITIONER FULL_ALL
+      &END OT
+      &OUTER_SCF  T
+        MAX_SCF 20
+        EPS_SCF 5.0E-8
+      &END OUTER_SCF
+    &END SCF
+    # &XC
+    #   DENSITY_CUTOFF     1.0E-12
+    #   GRADIENT_CUTOFF    1.0E-12
+    #   TAU_CUTOFF         1.0E-12
+    #   &XC_FUNCTIONAL PBE
+    #   &END XC_FUNCTIONAL
+    # &END XC
+    &XC
+      DENSITY_CUTOFF     1.0E-12
+      GRADIENT_CUTOFF    1.0E-12
+      TAU_CUTOFF         1.0E-12
+         &XC_FUNCTIONAL
+      &LYP
+         SCALE_C 0.81          ! 81% LYP correlation
+      &END
+      &BECKE88
+         SCALE_X 0.72          ! 72% Becke88 exchange
+      &END
+      &VWN
+         FUNCTIONAL_TYPE VWN3
+         SCALE_C 0.19          ! 19% LDA correlation
+      &END
+      &XALPHA
+         SCALE_X 0.08          ! 8%  LDA exchange
+      &END
+    &END XC_FUNCTIONAL
+    &HF
+      FRACTION 0.20            ! 20% HF exchange
+        &SCREENING
+          ! important parameter to get stable HFX calcs
+          EPS_SCHWARZ 1.0E-6
+          ! needs a good (GGA) initial guess 
+          SCREEN_ON_INITIAL_P TRUE
+        &END
+        &INTERACTION_POTENTIAL
+          ! for condensed phase systems
+          POTENTIAL_TYPE TRUNCATED
+          ! should be less than halve the cell
+          CUTOFF_RADIUS 4.0
+          ! data file needed with the truncated operator
+          T_C_G_DATA ./t_c_g.dat
+        &END
+      &MEMORY
+         MAX_MEMORY  3500     ! In MB per MPI rank
+      &END
+    &END HF
+
+    &VDW_POTENTIAL
+         POTENTIAL_TYPE PAIR_POTENTIAL
+         &PAIR_POTENTIAL
+            PARAMETER_FILE_NAME dftd3.dat
+            TYPE DFTD3
+            REFERENCE_FUNCTIONAL B3LYP
+            R_CUTOFF [angstrom] 16
+         &END
+      &END VDW_POTENTIAL
+
+    &END XC
+    &QS
+      # METHOD GAPW
+     METHOD GPW
+     EPS_DEFAULT 1.0E-10
+     EXTRAPOLATION ASPC
+     EXTRAPOLATION_ORDER  4
+# TODO: check this
+     # MIN_PAIR_LIST_RADIUS -1
+    &END QS
+  &END DFT
+  &QMMM
+    &CELL
+      A 10.366 0.000 0.000
+      B 0.000 10.366 0.000
+      C 0.000 0.000 10.366
+      # PERIODIC XYZ
+      PERIODIC NONE
+    &END CELL
+    CENTER EVERY_STEP
+    CENTER_GRID TRUE
+    &WALLS
+      TYPE REFLECTIVE
+    &END WALLS
+    ECOUPL GAUSS
+    USE_GEEP_LIB 12
+    &PERIODIC
+      GMAX     1.0E+00
+      &MULTIPOLE ON
+         RCUT     1.0E+01
+         EWALD_PRECISION     1.0E-06
+      &END
+    &END PERIODIC
+    &QM_KIND H  
+      MM_INDEX 1360 1362 1363 1364 1368 1370 1371 80431
+    &END QM_KIND
+    &QM_KIND C  
+      MM_INDEX 1359 1361 1365 1369
+    &END QM_KIND
+    &QM_KIND N  
+      MM_INDEX 1367
+    &END QM_KIND
+    &QM_KIND O  
+      MM_INDEX 1366 80430
+    &END QM_KIND
+    &LINK
+      QM_INDEX 1359
+      MM_INDEX 1357
+    &END LINK
+    &LINK
+      QM_INDEX 1369
+      MM_INDEX 1372
+    &END LINK
+  &END QMMM
+  &MM
+    &FORCEFIELD
+      DO_NONBONDED FALSE
+    &END FORCEFIELD
+    &POISSON
+      &EWALD
+        EWALD_TYPE NONE
+      &END EWALD
+    &END POISSON
+  &END MM
+  &SUBSYS
+    &CELL
+      A 57.875 0.000 0.000
+      B 0.000 60.841 0.000
+      C 0.000 0.000 232.416
+      PERIODIC XYZ
+    &END CELL
+    &TOPOLOGY
+      COORD_FILE_NAME COORD_FILE_NAME_PLACEHOLDER
+      COORD_FILE_FORMAT PDB
+      CHARGE_EXTENDED TRUE
+      CONNECTIVITY OFF
+      &GENERATE
+         &ISOLATED_ATOMS
+            LIST 1..80431
+         &END
+      &END GENERATE
+    &END TOPOLOGY
+    &KIND H  
+      ELEMENT H  
+      # BASIS_SET DZVP-MOLOPT-GTH
+      # POTENTIAL GTH-PBE
+      BASIS_SET 6-31G*
+      POTENTIAL GTH-BLYP
+    &END KIND
+    &KIND C  
+      ELEMENT C  
+      # BASIS_SET DZVP-MOLOPT-GTH
+      # POTENTIAL GTH-PBE
+      BASIS_SET 6-31G*
+      POTENTIAL GTH-BLYP
+    &END KIND
+    &KIND N  
+      ELEMENT N  
+      # BASIS_SET DZVP-MOLOPT-GTH
+      # POTENTIAL GTH-PBE
+      BASIS_SET 6-31G*
+      POTENTIAL GTH-BLYP
+    &END KIND
+    &KIND O  
+      ELEMENT O  
+      # BASIS_SET DZVP-MOLOPT-GTH
+      # POTENTIAL GTH-PBE
+      BASIS_SET 6-31G*
+      POTENTIAL GTH-BLYP
+    &END KIND
+    &KIND X
+      ELEMENT H
+    &END KIND
+  &END SUBSYS
+&END FORCE_EVAL

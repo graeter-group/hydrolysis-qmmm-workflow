@@ -1,0 +1,56 @@
+integrator  = md
+dt          = 0.001     ; 1 fs
+tinit       = 0
+nsteps      = 1    ; 1 fs
+nstcomm     = 1
+nstcalcenergy = 1
+; Output parameters
+nstxout     = 1
+nstvout     = 1 
+nstfout     = 1
+nstxtcout   = 1 
+nstenergy   = 1
+; Bond parameters
+constraint_algorithm    = lincs
+constraints             = h-bonds
+continuation            = yes       ; continuing from NPT 
+; Single-range cutoff scheme
+cutoff-scheme   = Verlet
+nstlist         = 20 
+rlist           = 1.4
+rcoulomb        = 1.4
+rvdw            = 1.4
+; PME electrostatics parameters
+coulombtype     = PME
+fourierspacing  = 0.12
+fourier_nx      = 0
+fourier_ny      = 0
+fourier_nz      = 0
+pme_order       = 4
+ewald_rtol      = 1e-5
+; Berendsen temperature coupling is on in two groups
+Tcoupl      = v-rescale
+tc_grps     = System
+tau_t       = 0.2
+ref_t       = 310
+; Pressure coupling is off for qmmm
+Pcoupl          = no
+refcoord_scaling = com
+; Generate velocities is off
+gen_vel     = no 
+pbc     = xyz
+; Long-range dispersion correction
+DispCorr    = EnerPres
+
+
+; CP2K QMMM parameters
+qmmm-cp2k-active              = true   ; Activate QMMM MdModule
+qmmm-cp2k-qmgroup             = QMAtoms; Index group of QM atoms
+qmmm-cp2k-qmmethod            = ${METHOD}    ; Method to use
+qmmm-cp2k-qmcharge            = ${CHARGE}      ; Charge of QM system
+qmmm-cp2k-qmmultiplicity      = 1      ; Multiplicity of QM system
+qmmm-cp2k-qmfilenames         = ${PREFIX}_cp2k
+
+
+
+

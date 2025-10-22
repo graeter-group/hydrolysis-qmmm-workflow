@@ -1,0 +1,510 @@
+---
+title: Automated Hydrolysis
+engine: jupyter
+execute:
+  eval: false
+---
+
+# Results
+
+See [analysis plots](./thesis.qmd).
+
+# Workflow
+
+## Manual Setup
+
+Initial collagen structure from: <https://colbuilder.h-its.org/index.html>
+
+ - Home Sapiens
+ - No crosslinks
+ - Collagen molecule (1 triple helix)
+
+Then take a smaller fragment of 1718 atoms from this with PyMOL and split into individual peptides: chain-{a-c}.pdb and triple.pdb (complete triplehelix)
+chain-a has 45 residues plus caps.
+chain-b has 43 residues plus caps.
+chain-c has 45 residues plus caps.
+
+## Setup
+
+```{python}
+from tqdm import tqdm
+import pandas as pd
+import os
+import src.steps as st
+import src.workflows as wf
+import src.analysis_utils as au
+import src.utils as ut
+import src.operations as op
+from src.analysis import NEW_IXS_C
+import logging
+from src.utils import pushd, read_env
+
+remote=True
+ut.activate_mpl(remote=remote)
+st.setup()
+logger = logging.getLogger("qm")
+logger.setLevel(logging.INFO)
+
+envs = st.setup_envs(force=True)
+new_envs = [e for e in envs if int(e["triple_ix_c_carbonyl"]) in NEW_IXS_C]
+og_envs = [e for e in envs if int(e["triple_ix_c_carbonyl"]) not in NEW_IXS_C]
+env = envs[0]
+```
+
+```{python}
+#| eval: false
+if remote:
+  os.environ["DISPLAY"] = 'localhost:10.0'
+else:
+  os.environ["DISPLAY"] = ':1'
+```
+
+## General
+
+- `ix_` refercs to the index of C and N respectively in the triplehelix, 0-based
+- the force after which the directory is named refers to the force on a single helix.
+- `charge` now refers to the total charge of the QM residues.
+  Add or substract from it when adding hydroxide!
+- Gromacs id (1-based, not unique for bigger systems) to index (idx), which is 0-based.
+- Gromacs id = ix + 1 (unless big)
+- VMD index = ix = MDAnalysis index
+- VMD serial = gromacs index file
+
+
+## Goals
+
+- Start from a pdb file of a collagen triple helix.
+- Standard `01-setup-system.sh`
+- Choose two adjacent residues to be set up as QMAtoms later.
+- Create two different setups, one with the triplehelix and
+  another with just the strand that the QM-Atoms to-be are in.
+- Equilibrate under an external force.
+- Make QMAtoms.
+  - create qm-topol.top with bond function to 5 for bonds between qm atoms.
+- Equilibrate shortly without custom input.
+- Automatically generate cp2k `template.inp` based on `reference_cp2k.inp`
+  (CELL sizes, QM_KINDs)
+  and a set of options to append to the template.
+- create input from template with `template-to-input.sh`
+- Short equilibration with custom input.
+- Look for a close water molecule for hydroxide attack
+  - distance and angle-based
+- Turn water into hydroxide
+  - double-check hydroxide ff parameters
+  - modify `top` and `gro`
+  - remove one proton and one $CL^{-}$
+- Pull hydroxide O to peptide $C$
+
+## Parameters and Inputs to the Workflow
+
+- Input pdb
+- Pair of residues
+  (Number might not be enough, same residue number duplicated in the three strands)
+- $F_{ext}$ (on a single peptide, x3 for the triple helix)
+- Custom parameters for cp2k input
+
+# Workflow
+
+## Hydrolysis Attack
+
+```{python}
+for env in tqdm(envs):
+  st.setup_chains(env)
+  st.equilibrate_chains(env)
+```
+
+If chains are equilibrated on the cluster, wait here until done.
+
+```{python}
+for env in tqdm(envs):
+  st.analyse_equilibrate_chains(env)
+```
+
+Visualize the chosen sites on the equilibrated triple helix.
+
+
+```{python}
+ixs_c = [int(env["triple_ix_c_carbonyl"]) for env in og_envs]
+ixs_n = [int(env["triple_ix_n_peptide"]) for env in og_envs]
+# example gro
+gro = "./run_6/f-603/ixs-178-180/triple/frame-96/eq.gro"
+selector = f"same residue as index {' '.join(map(str, ixs_c + ixs_n))}"
+
+op.vis_eq_gro(gro=gro, selector=selector)
+```
+
+Time to let the hydroxide attack.
+
+```{python}
+for env in tqdm(envs, desc="envs"):
+  st.setup_qm(env)
+```
+
+```{python}
+for env in tqdm(envs, desc="envs"):
+  st.setup_wethyds_warmup(env, parallel=True)
+```
+
+```{python}
+for env in tqdm(envs, desc="envs"):
+  st.start_wethyd_warmups(env, append=True)
+```
+
+```{python}
+outcomes = wf.check_wethyd_warmup_outcomes(envs)
+outcomes[outcomes.error == True]
+failed_warmups = outcomes[outcomes.time <= 0.019]
+failed_warmups
+```
+
+Continue with hydroxide attack after warmup.
+Can now use larger timestep and actual pulling.
+
+```{python}
+for env in tqdm(envs, desc="envs"):
+  st.setup_wethyds_after_warmup(env, parallel=True)
+```
+
+```{python}
+for env in tqdm(envs, desc="envs"):
+  st.start_wethyds(env, append=True)
+```
+
+```{python}
+st.analyse_wethyds(envs, analysis_types=['all'], force=False)
+```
+
+### Vis
+
+```{python}
+wethyd_choices: pd.DataFrame = pd.read_csv("./data/results/wethyd_choices.csv")
+job = 'wethyd'
+choices = wethyd_choices.query("ix_c == 329 and system == 'single'").reset_index()
+```
+
+TODO: what is up ix_c 329 single?
+example for substitution reaction we don't want to sample
+ix_c 329, frame 98, single
+
+```{python}
+cwd = choices.cwd[2]
+with pushd(cwd):
+  op.center_vis(job='wethyd', open=True)
+```
+
+Examples for likely subsitution reaction:
+- ix_c 178, frame 96, single: more like unlucky hydration shell
+
+
+```{python}
+cwd = 'run_6/f-603/ixs-178-180/single/frame-96'
+with pushd(cwd):
+  op.center_vis(job=job, open=True)
+```
+
+Example for likely nice TI:
+- ix_c 178, frame 92, single
+- ix_c 178, frame 97, triple
+
+```{python}
+cwd = 'run_6/f-603/ixs-178-180/single/frame-92'
+with pushd(cwd):
+  op.center_vis(job=job, open=True)
+```
+
+## Hydrolysis US
+
+Chose starting frames per system and environment
+that worked well for the hydrolysis attack.
+See [./analysis/04-hyd-us.qmd]
+
+
+### Start
+
+```{python}
+outcomes = wf.check_wethyd_outcomes(envs)
+```
+
+```{python}
+outcomes = pd.read_csv("./data/results/wethyd_outcomes.csv")
+outcomes
+```
+
+```{python}
+wethyd_choices = pd.read_csv("./data/results/wethyd_choices.csv")
+wetbreak_starts = pd.read_csv("./data/results/wetbreak_starts.csv")
+```
+
+```{python}
+choices = wethyd_choices.query("ix_c in @NEW_IXS_C")
+```
+
+```{python}
+st.setup_wethyd_us(choices=wethyd_choices, parallel=True)
+```
+
+```{python}
+st.start_wethyd_us(choices=wethyd_choices)
+```
+
+### Analysis
+
+```{python}
+us_outcomes = wf.check_wethyd_us_outcomes(envs)
+```
+
+```{python}
+us_outcomes = pd.read_csv("./data/results/wethyd_us_outcomes.csv")
+wethyd_choices = pd.read_csv("./data/results/wethyd_choices.csv")
+to_discard = pd.read_csv("./data/results/wethyd_us_to_discard.csv", dtype=str)
+```
+
+```{python}
+st.analyse_wethyd_us_combined(choices=wethyd_choices, to_discard=to_discard, force=True)
+au.write_timestamp("hyd-us-comb")
+st.analyse_wethyd_us(choices=wethyd_choices, to_discard=to_discard, force=True)
+au.write_timestamp("hyd-us")
+```
+
+```{python}
+st.analyse_wethyd_us_energies(wethyd_choices, force=False)
+st.analyse_ti_proton_distances(choices=wethyd_choices, force=False)
+st.analyse_ti_protonation(choices=wethyd_choices, force=False)
+st.analyse_ti_stability(choices=wethyd_choices, force=False)
+au.write_timestamp("hyd-energies")
+```
+
+## Bond Breaking
+
+Choose frame near a O-C distance of 0.14 nm.
+
+### Start
+
+```{python}
+wetbreak_starts = pd.read_csv("./data/results/wetbreak_starts.csv")
+wethyd_choices = pd.read_csv("./data/results/wethyd_choices.csv")
+```
+
+```{python}
+st.setup_wetbreak(wetbreak_starts)
+```
+
+```{python}
+st.start_wetbreak(wetbreak_starts, append=True)
+```
+
+```{python}
+st.setup_wetbreak_us(wetbreak_starts)
+```
+
+```{python}
+st.start_wetbreak_us(wetbreak_starts, append=True)
+```
+
+### Analysis
+
+```{python}
+# includes earlier break runs that are
+# not in wetbreak_starts
+# thus all directories of wethyd_choices
+# are checked for outcomes
+st.analyse_wetbreak_us(wethyd_choices, force=False)
+au.write_timestamp("break-us")
+```
+
+```{python}
+st.analyse_wetbreak_us_combined(wethyd_choices, force=False)
+au.write_timestamp("break-us-comb")
+```
+
+```{python}
+st.analyse_break_ti_distances(choices=wethyd_choices, force=False)
+au.write_timestamp("break-distances")
+```
+
+```{python}
+st.analyse_break_proton_distances(choices=wethyd_choices, force=False)
+au.write_timestamp("break-protons")
+```
+
+### Visualization
+
+```{python}
+# cwd = 'run_6/f-603/ixs-178-180/single/frame-96'
+cwd = wetbreak_starts.cwd[3]
+job = 'wetbreak'
+```
+
+```{python}
+st.center_vis_in(cwd=cwd, job=job, open=True)
+```
+
+# Visualization
+
+## hyd
+
+```{python}
+bond_dir = "run_6/f-603/ixs-178-180"
+frame = 96
+demo_envs = [env for env in envs if env["peptide_bond_dir"] == bond_dir]
+```
+
+```{python}
+system = 'single'
+cwd = bond_dir + f"/{system}/frame-{frame}"
+env = read_env(cwd)
+assert env
+ts = env["wethyd-config-times"]
+ts.sort(key=float)
+n = len(ts)
+```
+
+```{python}
+t = ts[0]
+job = "wethyd"
+gro = f"{job}-conf-{t}-start.gro"
+with pushd(cwd):
+  op.vis_gro(job=job, gro=gro, center=True, open=True, force=True)
+```
+
+```{python}
+t = ts[-1]
+job = "wethyd"
+gro = f"{job}-conf-{t}-start.gro"
+
+with pushd(cwd):
+  op.vis_gro(job=job, gro=gro, center=True, open=True, force=True)
+```
+
+
+```{python}
+system = 'triple'
+cwd = bond_dir + f"/{system}/frame-{frame}"
+env = read_env(cwd)
+assert env
+ts = env["wethyd-config-times"]
+ts.sort(key=float)
+n = len(ts)
+
+t = ts[-1]
+job = "wethyd"
+gro = f"{job}-conf-{t}-start.gro"
+
+with pushd(cwd):
+  op.vis_gro(job=job, gro=gro, center=True, open=True, force=True)
+```
+
+## break
+
+
+```{python}
+job = "wetbreak"
+system = 'single'
+cwd = bond_dir + f"/{system}/frame-{frame}"
+env = read_env(cwd)
+assert env
+ts = env["wetbreak-config-times"]
+ts.sort(key=float)
+n = len(ts)
+```
+
+```{python}
+t = ts[-1]
+gro = f"{job}-conf-{t}-start.gro"
+
+with pushd(cwd):
+  op.vis_gro(job=job, gro=gro, center=True, open=True, force=True)
+```
+
+# Interactive Tests
+
+```{python}
+job = 'wethyd-warmup'
+cwd = 'run_6/f-603/ixs-228-230/triple/frame-100'
+
+with pushd(cwd):
+  r = ut.check_logfiles_for_errors(job=job)
+
+print(r)
+```
+
+```{python}
+ut.slurm_dispatch(
+    cwd=cwd,
+    job=job,
+    force=True,
+    append=True,
+    # max_time=0.0198,
+)
+```
+
+# Cleanup
+
+Clean slurm files and backup files
+
+```{python}
+running_or_waiting = ut.get_running_jobs()
+for env in envs:
+  ut.clean_all(env, exclude=running_or_waiting["job"])
+env = envs[0]
+```
+
+```{python}
+running = [j for j,s in zip(running_or_waiting["job"], running_or_waiting["status"]) if 'cascade' in s]
+len(running)
+```
+
+```{python}
+waiting = [i for j,s,i in zip(running_or_waiting["job"], running_or_waiting["status"], running_or_waiting["id"]) if not 'cascade' in s]
+len(waiting)
+```
+
+
+```{python}
+old_waiting = [
+  i for j,s,i in zip(running_or_waiting["job"], running_or_waiting["status"], running_or_waiting["id"])
+  if not 'cascade' in s
+  and not any(f"ixs-{ix_c}" in j for ix_c in NEW_IXS_C)
+]
+len(old_waiting)
+```
+
+
+```{python}
+ids = []
+```
+
+```{python}
+#| eval: false
+ut.cancel_jobs(ids)
+```
+
+# Danger Zone
+
+::: {.callout-warning}
+These code blocks potentially move or delete large amounts of data.
+This is why they are guarded against being run unintentionally
+by setting `eval: false`, being commented out and using a non-existent
+job name `XXX` as a placeholder.
+:::
+
+Archive jobs.
+
+```{python}
+#| eval: false
+# job = 'XXX'
+# name = 'XXX'
+# ut.archive_job(envs, job, name)
+```
+
+Clean **all** output files of a job.
+
+```{python}
+#| eval: false
+
+# for env in envs:
+#   ut.clear_job(env=env, job='XXX', rotref=False)
+# env = envs[0]
+
+```
+

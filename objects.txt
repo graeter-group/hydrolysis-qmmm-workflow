@@ -1,0 +1,9 @@
+# Sphinx inventory version 2
+# Project: src
+# Version: 0.0.9999
+# The remainder of this file is compressed using zlib.
+src.parsing.Gro py:class 1 reference/parsing.html#src.parsing.Gro -
+src.parsing.GroAtom.angle py:function 1 reference/parsing.html#src.parsing.GroAtom.angle -
+src.parsing.GroAtom.distance py:function 1 reference/parsing.html#src.parsing.GroAtom.distance -
+src.parsing.GroAtom py:class 1 reference/parsing.html#src.parsing.GroAtom -
+src.parsing py:module 1 reference/parsing.html#src.parsing -

@@ -1,0 +1,391 @@
+---
+title: "Analysis"
+format: html
+execute:
+  eval: false
+---
+
+# Setup
+
+```{python}
+from plotnine import *  # pyright: ignore
+import pandas as pd
+import numpy as np
+from hamilton import driver
+from hamilton.caching.stores.sqlite import SQLiteMetadataStore
+from hamilton.caching.stores.file import FileResultStore
+import src.analysis as analysis
+import src.analysis_utils as au
+import src.style as style
+from src.utils import read_env, read_xvg, activate_mpl
+import matplotlib.pyplot as plt
+import os
+
+from hamilton import telemetry
+telemetry.disable_telemetry()
+
+_ = style
+
+remote=False
+```
+
+```{python}
+#| eval: false
+if remote:
+  os.environ["DISPLAY"] = 'localhost:10.0'
+else:
+  os.environ["DISPLAY"] = ':0'
+```
+
+# Pipeline
+
+```{python}
+#| eval: false
+au.write_timestamp("hyd-us")
+au.write_timestamp("hyd-us-comb")
+au.write_timestamp("hyd-energies")
+```
+
+```{python}
+metadata_store = SQLiteMetadataStore(path="/data/.hamilton_cache")
+result_store = FileResultStore(path="/data/.hamilton_results_cache")
+
+dr = (
+    driver.Builder()
+    .with_modules(analysis)
+    .with_cache(
+        metadata_store=metadata_store,
+        result_store=result_store,
+    )
+    .build()
+)
+
+result = dr.execute(
+    final_vars=[
+        "wethyd_us_energies",
+        "parameters",
+        "hyd_pull",
+        "hyd_distances",
+        "mean_hyd_distances",
+        "wethyd_choices",
+        "wethyd_us_comb",
+        "wethyd_us",
+        "wetbreak_us"
+    ]
+)
+```
+
+# WIP
+
+
+```{python}
+energies: pd.DataFrame = result["wethyd_us_energies"]
+energies
+```
+
+
+```{python}
+result['wethyd_us']
+```
+
+## Is the TI intact?
+
+```{python}
+ti = energies[["ix_c", "ix_n", "system", "conf_d", "conf_t", "frame", "time", "c_o_carb", "c_o_oh"]]
+```
+
+```{python}
+ti.query("c_o_carb >= 0.16")
+```
+
+```{python}
+df = ti.groupby(["ix_c", "ix_n", "system", "conf_d", "conf_t", "frame"]).agg(
+    {
+    "c_o_carb": np.mean,
+    "c_o_oh": np.mean,
+     }
+).reset_index()
+```
+
+```{python}
+df
+```
+
+```{python}
+p = (
+    ggplot(df, aes(x="c_o_oh", y="c_o_carb", color="system"))
+    + geom_point()
+    + facet_wrap("~ix_c+ix_n", scales="free_y")
+    + labs(x="d (nm)")
+)
+p.show()
+```
+
+
+```{python}
+ti_mean = ti.groupby(["ix_c", "ix_n", "system", "conf_d", "conf_t", "frame"])[["c_o_carb", "c_o_oh"]].mean().reset_index()
+```
+
+
+## TI
+
+How is the tetrameric intermediate stabilitzed?
+
+```{python}
+tiprots = energies.query("c_o_carb <= 0.16").groupby(["ix_c", "ix_n", "system", "conf_d", "conf_t", "frame"])[["n_h_oh", "n_h_oc", "n_h_qw"]].mean().reset_index()
+# sutract 14*2 from n_h_qw to just get excess protons
+tiprots["n_h_qw"] = tiprots["n_h_qw"] - 14 * 2
+tiprots
+```
+
+```{python}
+df = tiprots.melt(
+    id_vars=["ix_c", "ix_n", "system", "frame", "conf_d"],
+    value_vars=["n_h_oh", "n_h_oc", "n_h_qw"],
+    var_name="type",
+    value_name="n",
+)
+df["resname_c"] = df["ix_c"].apply(analysis.ix_to_resname)
+df["resname_n"] = df["ix_n"].apply(analysis.ix_to_resname)
+df['conf_d'] = df['conf_d'].astype(float)
+df['type'] = df['type'].astype("category")
+df["group"] = df["ix_c"].astype(str) + "-" + df["ix_n"].astype(str) + "-" + df["system"].astype(str) + "-" + df["type"].astype(str)
+df["sys"] = df["ix_c"].astype(str) + "-" + df["ix_n"].astype(str) + "-" + df["system"].astype(str)
+# df["sys2"] = df["resname_c"].astype(str) + "-" + df["resname_n"].astype(str) + "-" + df["system"].astype(str) + df["frame"].astype(str)
+df["sys2"] = df["resname_c"].astype(str) + "-" + df["resname_n"].astype(str) + "-" + df["system"].astype(str)
+df["sys_type"] = df["system"].astype(str) + "-" + df["type"].astype(str)
+df = df.query("type != 'n_h_qw'")
+```
+
+```{python}
+p = (
+    ggplot(df, aes(x="conf_d", y="n"))
+    # + geom_line()
+    + geom_smooth(aes(color='type'), method='loess', se=False, span=0.1)
+    + facet_wrap("~sys2", scales="free_y")
+    + labs(x="d (nm)", y="n_H")
+    + scale_color_manual(values=[style.HITS_MAGENTA, style.MPI_GREEN])
+)
+p.show()
+```
+
+
+```{python}
+tidists = energies.groupby(["ix_c", "ix_n", "system", "conf_d", "conf_t", "frame"])[["solh", "proteinh", "qmh"]].mean().reset_index()
+molten = tidists.melt(
+    id_vars=["ix_c", "ix_n", "system", "conf_d"],
+    value_vars=["solh", "proteinh", "qmh"],
+    var_name="type",
+    value_name="dist",
+)
+molten['conf_d'] = molten['conf_d'].astype(float)
+molten['type'] = molten['type'].astype("category")
+molten["group"] = molten["ix_c"].astype(str) + "-" + molten["ix_n"].astype(str) + "-" + molten["system"].astype(str) + "-" + molten["type"].astype(str)
+molten["sys"] = molten["ix_c"].astype(str) + "-" + molten["ix_n"].astype(str) + "-" + molten["system"].astype(str)
+molten = molten.query("`conf_d` < 0.5")
+```
+
+```{python}
+molten.columns
+```
+
+```{python}
+p = (
+    ggplot(molten, aes(x="conf_d", y="dist", color="type", goup="group"))
+    + geom_line()
+    # + geom_smooth(aes(group='type'), color='black', method='loess', se=False, span=0.1)
+    + facet_wrap("~sys", scales="free_y")
+    + labs(x="d (nm)", y="distance (nm)")
+)
+p.show()
+```
+
+
+## Protdist
+
+# Visualization
+
+## Umbrella sampling of TS1
+
+```{python}
+hist_comb, prof_comb = result["wethyd_us_comb"]
+prof_comb: pd.DataFrame
+```
+
+filter out energires that are exactly equal to 0.0
+substract baseline energy around x == 0.45 +- 0.01 per group 
+(resname_c, resname_n, system)
+
+```{python}
+df = prof_comb.query("E.notna() and E != 0.0")
+df.loc[:,"E"] = df.groupby(["resname_c", "resname_n", "system"])["E"].transform(
+    lambda x: x - x[(df["x"] > 0.44) & (df["x"] < 0.46)].mean()
+)
+df.loc[:,'resnames'] = df['resname_c'] + "-" + df['resname_n']
+```
+
+```{python}
+p = (
+    ggplot(df, aes(x="x", y="E", color="system", group="system"))
+    + geom_ribbon(aes(ymin="E-dE", ymax="E+dE"), alpha=0.1, color=None)
+    + geom_line(size=1.5)
+    + geom_vline(xintercept=0.145, linetype="dashed", color="red")
+    + geom_vline(xintercept=0.16, linetype="dashed", color="black")
+    + geom_vline(xintercept=0.2, linetype="dashed", color="black")
+    + geom_vline(xintercept=0.44, linetype="dashed", color="red")
+    + facet_wrap("~resname_c+resname_n")
+)
+p.show()
+```
+
+Get delta E between x around 0.44 and x around 0.145 for each group and
+add a marker column if proline ('PRO') or hydroxy proline ('HYP') is present in the resname_c or resname_n
+the marker will say C if the either is in resname_c and N if it is in resname_n, otherwise
+it will say None.
+
+
+```{python}
+dE_to_ti = df.groupby(["resnames", "resname_c", "resname_n", "system"]).apply(
+    lambda x: x.query("x > 0.14 and x < 0.15")["E"].min() - x.query("x > 0.43 and x < 0.45")["E"].mean(),
+    include_groups=False
+).reset_index(name="delta_E")
+
+dE_to_ti["marker"] = dE_to_ti.apply(
+    lambda x: "C" if "PRO" in x["resname_c"] or "HYP" in x["resname_c"] else ("N" if "PRO" in x["resname_n"] or "HYP" in x["resname_n"] else None),
+    axis=1
+)
+```
+
+```{python}
+p = (
+    ggplot(dE_to_ti, aes(x="resnames", y="delta_E", fill='marker'))
+    + geom_col(position="dodge")
+    + labs(y="delta E (kJ/mol)")
+    + theme(axis_text_x=element_text(rotation=45, hjust=1))
+)
+p.show()
+```
+
+
+```{python}
+dE_to_ts1 = df.groupby(["resnames", "resname_c", "resname_n", "system"]).apply(
+    lambda x: x.query("x > 0.16 and x < 0.2")["E"].max() - x.query("x > 0.43 and x < 0.45")["E"].mean(),
+    include_groups=False
+).reset_index(name="delta_E")
+
+dE_to_ts1["marker"] = dE_to_ts1.apply(
+    lambda x: "C" if "PRO" in x["resname_c"] or "HYP" in x["resname_c"] else ("N" if "PRO" in x["resname_n"] or "HYP" in x["resname_n"] else None),
+    axis=1
+)
+# filter for single system
+dE_to_ts1_single = dE_to_ts1.query("system == 'single'").reset_index(drop=True)
+# and triple
+dE_to_ts1_triple = dE_to_ts1.query("system == 'triple'").reset_index(drop=True)
+```
+
+```{python}
+p = (
+    ggplot(dE_to_ts1, aes(x="resnames", y="delta_E", fill='marker'))
+    + geom_col(position="dodge")
+    + labs(y="delta E (kJ/mol)")
+    + facet_wrap("~system")
+    + theme(axis_text_x=element_text(rotation=45, hjust=1))
+)
+p.show()
+```
+
+```{python}
+p = (
+    ggplot(dE_to_ts1_single, aes(x="resnames", y="delta_E", fill='marker'))
+    + geom_col(position="dodge")
+    + labs(y="delta E (kJ/mol)")
+    + theme(axis_text_x=element_text(rotation=45, hjust=1))
+)
+p.show()
+```
+
+```{python}
+p = (
+    ggplot(dE_to_ts1_triple, aes(x="resnames", y="delta_E", fill='marker'))
+    + geom_col(position="dodge")
+    + labs(y="delta E (kJ/mol)")
+    + theme(axis_text_x=element_text(rotation=45, hjust=1))
+)
+p.show()
+```
+
+## Umbrella sampling of TS2
+
+```{python}
+hist_comb, prof_comb = result["wetbreak_us"]
+prof_comb: pd.DataFrame
+```
+
+```{python}
+df = prof_comb.query("E.notna() and E != 0.0")
+# df.loc[:,"E"] = df.groupby(["resname_c", "resname_n", "system"])["E"].transform(
+#     lambda x: x - x[(df["x"] > 0.44) & (df["x"] < 0.46)].mean()
+# )
+df.loc[:,'resnames'] = df['resname_c'] + "-" + df['resname_n']
+```
+
+```{python}
+p = (
+    ggplot(df, aes(x="x", y="E", color="system", group="system"))
+    + geom_ribbon(aes(ymin="E-dE", ymax="E+dE"), alpha=0.1, color=None)
+    + geom_line(size=1.5)
+    + geom_vline(xintercept=0.145, linetype="dashed", color="red")
+    + geom_vline(xintercept=0.16, linetype="dashed", color="black")
+    + geom_vline(xintercept=0.2, linetype="dashed", color="black")
+    + geom_vline(xintercept=0.44, linetype="dashed", color="red")
+    + facet_wrap("~resname_c+resname_n")
+)
+p.show()
+```
+
+
+
+# Cleanup jobs
+
+To rerun certain hamilton nodes:
+
+```{python}
+#| eval: false
+au.write_timestamp("hyd")
+```
+
+
+```{python}
+dot = dr.display_all_functions()
+outfile = "graph.svg"
+dot.render(outfile=outfile, format="svg", cleanup=True)
+html = f"""
+<html>
+    <h2>Hamilton DAG</h2>
+    <img src="{outfile}" alt="Hamilton DAG" style="width: 100%">
+</html>
+"""
+with open("graph.html", "w") as f:
+    f.write(html)
+```
+
+
+```{python}
+def recompute(node):
+    id = dr.cache.last_run_id
+    key = dr.cache.data_versions[id][node]
+    dr.cache.result_store.delete(key)
+    dr.cache.metadata_store.delete(key)
+
+def clear_cache():
+    dr.cache.metadata_store.delete_all()
+    dr.cache.result_store.delete_all()
+```
+
+```{python}
+# | eval: false
+import shutil
+
+shutil.rmtree("./.hamilton_cache", ignore_errors=True)
+```
+

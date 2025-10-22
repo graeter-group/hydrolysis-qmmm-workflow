@@ -1,0 +1,28 @@
+[project]
+name = "hydrolysis"
+version = "0.1.0"
+description = "Add your description here"
+readme = "readme.md"
+requires-python = "==3.11.13"
+dependencies = [
+  "cp2k-input-tools",
+  "kimmdy-paper-theme",
+  "kimmdy",
+  "pandas",
+  "tqdm",
+  "plotnine",
+  "sf-hamilton[lsp,visualization]",
+  "mdanalysis",
+  "ipython>=9.6.0",
+  "jupyter>=1.1.1",
+  "pyqt5>=5.15.11",
+  "seaborn>=0.13.2",
+  "pint>=0.20.1",
+  "numpy<2.0",
+  "pyarrow>=21.0.0",
+  "scikit-misc>=0.5.1",
+]
+
+[tool.uv.sources]
+cp2k-input-tools = { git = "https://github.com/jmbuhr/cp2k-input-tools.git", rev = "7c460d3" }
+kimmdy-paper-theme = { git = "ssh://git@github.com/graeter-group/kimmdy_paper_theme" }

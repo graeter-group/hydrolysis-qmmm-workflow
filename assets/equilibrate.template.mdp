@@ -1,0 +1,67 @@
+integrator  = md
+dt          = 0.002    ; 2 fs
+tinit       = 0
+nsteps      = ${NSTEPS}
+nstcomm     = 10
+; Output parameters
+nstxout     = 5000      ; every 10 ps
+nstvout     = 5000 
+nstfout     = 500
+nstxtcout   = 500       ; every 1 ps
+nstenergy   = 500
+; Bond parameters
+constraint_algorithm    = lincs
+constraints             = h-bonds
+continuation            = yes       ; continuing from NPT 
+; Single-range cutoff scheme
+cutoff-scheme   = Verlet
+nstlist         = 20 
+rlist           = 1.4
+rcoulomb        = 1.4
+rvdw            = 1.4
+coulombtype     = PME
+fourierspacing  = 0.12
+fourier_nx      = 0
+fourier_ny      = 0
+fourier_nz      = 0
+pme_order       = 4
+ewald_rtol      = 1e-5
+Tcoupl      = v-rescale
+tc_grps     = System
+tau_t       = 1.0
+ref_t       = 310
+Pcoupl          = Parrinello-Rahman 
+pcoupltype      = isotropic
+tau_p           = 1.0
+compressibility = 4.5e-5
+ref_p           = 1.0
+refcoord_scaling = com
+gen_vel     = no 
+pbc     = xyz
+DispCorr    = EnerPres
+
+; Pull code
+pull                    = yes
+pull-ncoords            = 2         ; defined by N- and C-term
+pull-ngroups            = 2         
+
+pull-group1-name        = NTERM ;done
+pull-group2-name        = CTERM
+
+pull-coord1-groups      = 0 1
+pull-coord1-type        = constant-force 
+pull-coord1-geometry    = direction
+pull-coord1-dim         = N N Y
+pull-coord1-vec         = 0 0 1
+pull-coord1-start       = yes
+pull-coord1-k           = -${EXTERNAL_FORCE}  ; kJ mol^-1 nm^-2
+
+pull-coord2-groups      = 0 2
+pull-coord2-type        = constant-force 
+pull-coord2-geometry    = direction
+pull-coord2-dim         = N N Y
+pull-coord2-vec         = 0 0 1
+pull-coord2-start       = yes
+pull-coord2-k           = ${EXTERNAL_FORCE}  ; kJ mol^-1 nm^-2
+
+${ROTATION_RESTRAINTS}
