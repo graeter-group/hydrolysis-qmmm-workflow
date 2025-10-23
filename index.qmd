@@ -400,10 +400,21 @@ Just Ala845-Gly846, Gly840-Ala841, Hyp851-Gly852.
 
 ixs_c: 802, 745, 881
 
+```
+ix_c  frame
+ 745     93
+ 745     97
+ 802     93
+ 802     97
+ 881     96
+ 881     97
+```
+
 ```{python}
 job = "wetbreak"
-bond_dir = "run_6/f-603/ixs-178-180"
+bond_dir = "run_6/f-603/ixs-881-883"
 system = 'single'
+frame = 96
 cwd = bond_dir + f"/{system}/frame-{frame}"
 env = read_env(cwd)
 assert env

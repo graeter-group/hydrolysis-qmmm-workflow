@@ -842,6 +842,7 @@ just Ala845-Gly846, Gly840-Ala841, Hyp851-Gly852
 df = break_protons.query("resnames in ['Ala845-Gly846', 'Gly840-Ala841', 'Hyp851-Gly852']")
 ```
 
+
 ```{python}
 p = (
     ggplot(df, aes(x="conf_d", y="n"))
@@ -871,6 +872,12 @@ Extract theses ixs to use as example trajectories for visualization.
 
 ```{python}
 df.ix_c.unique()
+```
+
+print unique ix_c and frame combinations to extract example trajectories later
+
+```{python}
+df[["ix_c", "frame"]].drop_duplicates().sort_values(by=["ix_c", "frame"]).reset_index(drop=True)
 ```
 
 # Misc

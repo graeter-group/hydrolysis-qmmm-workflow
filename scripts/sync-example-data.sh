@@ -18,3 +18,11 @@ rsync --stats -h "${source}/wethyd.tpr" "$d"
 rsync --stats -h "${source}/wetbreak.tpr" "$d"
 
 
+# Hyp851-Gly852
+d="run_6/f-603/ixs-881-883/single/frame-96"
+source="zeus:/hits/fast/mbm/buhrjk/phd/col-hydrolysis/qmmm/hydrolysis/$d"
+mkdir -p "$d"
+
+rsync --stats -h "${source}/*.gro" "$d"
+rsync --stats -h "${source}/wetbreak.tpr" "$d"
+
