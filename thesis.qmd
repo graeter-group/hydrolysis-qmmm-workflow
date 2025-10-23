@@ -97,7 +97,8 @@ final_vars = [
     "wethyd_us_comb",
     "wetbreak_us",
     "wetbreak_us_comb",
-    "break_us_distances"
+    "break_us_distances",
+    "break_us_protons"
 ]
 
 result = dr.execute(

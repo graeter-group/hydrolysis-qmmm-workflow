@@ -20,7 +20,8 @@ from src.analysis_utils import (
     read_us_prof,
     analyse_wethyd_us_frame,
     analyse_break_distances_frame,
-    analyse_us_comb
+    analyse_break_protons_frame,
+    analyse_us_comb,
 )
 from src.settings import N_FRAMES
 from src.utils import read_xvg
