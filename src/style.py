@@ -29,15 +29,10 @@ HITS_YELLOW = "#ffcc00"
 HITS_YELLOW_LIGHT = "#ffe07d"
 
 # https://www.mpikg.mpg.de/6339023/Logo-Guide-Print-_-Max-Planck-Gesellschaft.pdf
-MPG_grey_dark = "#777777"
 MPI_GREEN = "#006c66"
 MPI_GREEN_SECONDARY = "#055000"
 MPI_DARK_GREY = "#777777"
 
-experiment = "#0088c2"
-experiment_light = "#55b4dc"
-kimmdy = "#c3006b"
-kimmdy_light = "#da7da6"
 
 rc = plt.rcParams
 

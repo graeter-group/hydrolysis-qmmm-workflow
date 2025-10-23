@@ -396,9 +396,13 @@ with pushd(cwd):
 
 ## break
 
+Just Ala845-Gly846, Gly840-Ala841, Hyp851-Gly852.
+
+ixs_c: 802, 745, 881
 
 ```{python}
 job = "wetbreak"
+bond_dir = "run_6/f-603/ixs-178-180"
 system = 'single'
 cwd = bond_dir + f"/{system}/frame-{frame}"
 env = read_env(cwd)

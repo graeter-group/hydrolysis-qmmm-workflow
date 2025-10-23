@@ -29,7 +29,9 @@ from src.constants import HAMILTON_CACHE
 from src.style import (
     HITS_CYAN_LIGHT,
     HITS_DARKBLUE,
+    HITS_GREEN,
     HITS_MAGENTA,
+    HITS_SIGNALBLUE,
     MPI_DARK_GREY,
     MPI_GREEN,
     MPI_DARK_GREY,
@@ -123,6 +125,31 @@ prof = result["wethyd_us_prof"]
 hist_comb, prof_comb = result["wethyd_us_comb"]
 prof_comb: pd.DataFrame
 hist_comb: pd.DataFrame
+
+hist_break, prof_break = result["wetbreak_us_comb"]
+prof_break: pd.DataFrame
+hist_break: pd.DataFrame
+
+prof_break = prof_break.query("E.notna() and E != 0.0").copy()
+prof_break["E"] = prof_break.groupby(["resname_c", "resname_n", "system"])["E"].transform(
+    lambda x: x - x[(prof_break["x"] > ts2_base_x - ts2_base_w) & (prof_break["x"] < ts2_base_x + ts2_base_w)].mean()
+)
+prof_break['resnames'] = prof_break['resname_c'] + "-" + prof_break['resname_n']
+
+break_protons: pd.DataFrame = result["break_us_protons"].query("n_h_oh.notna()")
+break_protons['n_h_carboxyl'] = break_protons['n_h_oc'] + break_protons['n_h_oh']
+break_protons['n_h_amino'] = break_protons['n_h_n']
+break_protons = break_protons.drop(columns=['n_h_oc', 'n_h_oh', 'n_h_n'])
+break_protons = break_protons.melt(
+    id_vars=ix_cols,
+    value_vars=["n_h_qw", "n_h_carboxyl", "n_h_amino"],
+    var_name="type",
+    value_name="n",
+)
+break_protons = break_protons.query("type != 'n_h_qw'")
+break_protons = au.apply_group_names(break_protons)
+break_protons['type'] = break_protons['type'].map({'n_h_carboxyl': 'carboxyl group', 'n_h_amino': 'amino group'}) # pyright: ignore
+break_protons['type'] = break_protons['type'].astype("category")
 ```
 
 ## Equilibration
@@ -757,24 +784,9 @@ Example for likely nice TI:
 
 ## Umbrella sampling of the Break (TS2)
 
-```{python}
-hist_break, prof_break = result["wetbreak_us_comb"]
-prof_break: pd.DataFrame
-hist_break: pd.DataFrame
-
-```
-
 ### Histograms
 
 ### Profiles
-
-```{python}
-prof_break = prof_break.query("E.notna() and E != 0.0").copy()
-prof_break["E"] = prof_break.groupby(["resname_c", "resname_n", "system"])["E"].transform(
-    lambda x: x - x[(prof_break["x"] > ts2_base_x - ts2_base_w) & (prof_break["x"] < ts2_base_x + ts2_base_w)].mean()
-)
-prof_break['resnames'] = prof_break['resname_c'] + "-" + prof_break['resname_n']
-```
 
 ```{python}
 p = (
@@ -817,9 +829,48 @@ p = (
       fill=False
     )
 )
-p.save("./plots/wetbreak_us_profiles_example.png", dpi=DPI, width=double_column, height=double_column*0.3)
-p.save("./plots/wetbreak_us_profiles_example.svg", dpi=DPI, width=double_column, height=double_column*0.3)
+p.save("./plots/wetbreak_us_profiles_example.png", dpi=DPI, width=double_column*4/10, height=double_column*1/3)
+p.save("./plots/wetbreak_us_profiles_example.svg", dpi=DPI, width=double_column*4/10, height=double_column*1/3)
 p.show()
+```
+
+## Protonation States during Break
+
+just Ala845-Gly846, Gly840-Ala841, Hyp851-Gly852
+
+```{python}
+df = break_protons.query("resnames in ['Ala845-Gly846', 'Gly840-Ala841', 'Hyp851-Gly852']")
+```
+
+```{python}
+p = (
+    ggplot(df, aes(x="conf_d", y="n"))
+    # + geom_point(aes(group='group', color='type'), alpha=0.1)
+    + geom_smooth(aes(color='type'), method='loess', se=False, span=0.12)
+    + facet_wrap("sys2", scales="free_y")
+    + labs(x=r"$\text{d}~[\text{nm}]$",
+           y=r"$\text{n}_{\text{H}^+}$",
+           color = r"$\text{n}_{\text{H}^+}$ at"
+           )
+    + scale_color_manual(
+        values={
+            "carboxyl group": HITS_SIGNALBLUE,
+            "amino group": HITS_GREEN
+        }
+    )
+    + scale_x_continuous(limits=(0.14, 0.5))
+    + scale_y_continuous(breaks=np.arange(0, 4, 0.5), limits=(0, 3)) # pyright: ignore
+    + theme(legend_position="top")
+)
+p.save("./plots/wetbreak_us_tiprots_example.png", dpi=DPI, width=double_column*6/10, height=double_column*1/3)
+p.save("./plots/wetbreak_us_tiprots_example.svg", dpi=72, width=double_column*6/10, height=double_column*1/3)
+p.show()
+```
+
+Extract theses ixs to use as example trajectories for visualization.
+
+```{python}
+df.ix_c.unique()
 ```
 
 # Misc
