@@ -424,12 +424,18 @@ n = len(ts)
 ```
 
 ```{python}
-t = ts[-1]
+t = ts[-7]
 gro = f"{job}-conf-{t}-start.gro"
 
 with pushd(cwd):
   op.vis_gro(job=job, gro=gro, center=True, open=True, force=True)
 ```
+
+```
+cd run_6/f-603/ixs-881-883/single/frame-96/
+vmd -e vis-break.vmd
+```
+
 
 # Interactive Tests
 

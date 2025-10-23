@@ -24,5 +24,7 @@ source="zeus:/hits/fast/mbm/buhrjk/phd/col-hydrolysis/qmmm/hydrolysis/$d"
 mkdir -p "$d"
 
 rsync --stats -h "${source}/*.gro" "$d"
+rsync --stats -h "${source}/env.json" "$d"
+rsync --stats -h "${source}/*.ndx" "$d"
 rsync --stats -h "${source}/wetbreak.tpr" "$d"
 

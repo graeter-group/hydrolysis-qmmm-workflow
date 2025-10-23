@@ -419,7 +419,7 @@ Umbrella windows.
 <!-- TODO: this -->
 
 
-## Plot TI protonation states
+## TI protonation states
 
 ### No filtering
 
@@ -609,7 +609,7 @@ p = (
     + scale_fill_manual(values={"single": "black", "triple": MPI_GREEN})
     + labs(x=r"$\text{d}~[\text{nm}]$", y=r"$\Delta$G [kJ/mol]")
     + guides(
-      color=guide_legend(title="System", position=(1,0), override_aes={'fill': None, 'size': 3}),
+      color=guide_legend(title="System", position=(1,0), override_aes={'fill': None, 'size': 1.5}),
       fill=False
     )
 )
@@ -791,10 +791,6 @@ Example for likely nice TI:
 ```{python}
 p = (
     ggplot(prof_break, aes(x="x", y="E", color="system", group="system"))
-    # shade the TS1 region
-    # + geom_rect(aes(xmin=ts2_ts_x - ts_w, xmax=ts2_ts_x + ts2_ts_w, ymin=-np.inf, ymax=np.inf), fill=HITS_CYAN_LIGHT, alpha=0.01, inherit_aes=False)
-    # shade the TI region
-    # + geom_rect(aes(xmin=ti_x - ti_w, xmax=ti_x + ti_w, ymin=-np.inf, ymax=np.inf), fill=MPI_DARK_GREY, alpha=0.01, inherit_aes=False)
     + geom_ribbon(aes(ymin="E-dE", ymax="E+dE", fill='system'), alpha=0.4, color=None, outline_type='full')
     + geom_line()
     + geom_point()
@@ -813,10 +809,6 @@ just Ala845-Gly846, Gly840-Ala841, Hyp851-Gly852
 ```{python}
 p = (
     ggplot(prof_break.query("resnames in ['Ala845-Gly846', 'Gly840-Ala841', 'Hyp851-Gly852']"), aes(x="x", y="E", color="system", group="system"))
-    # shade the TS1 region
-    # + geom_rect(aes(xmin=ts2_ts_x - ts2_ts_w, xmax=ts2_ts_x + ts2_ts_w, ymin=-np.inf, ymax=np.inf), fill=HITS_CYAN_LIGHT, alpha=0.01, inherit_aes=False)
-    # shade the TI region
-    # + geom_rect(aes(xmin=ti_x - ti_w, xmax=ti_x + ti_w, ymin=-np.inf, ymax=np.inf), fill=MPI_DARK_GREY, alpha=0.01, inherit_aes=False)
     + geom_ribbon(aes(ymin="E-dE", ymax="E+dE", fill='system'), alpha=0.4, color=None, outline_type='full')
     + geom_line()
     # + geom_point(show_legend=False)
@@ -825,7 +817,7 @@ p = (
     + scale_fill_manual(values={"single": "black", "triple": MPI_GREEN})
     + labs(x=r"$\text{d}~[\text{nm}]$", y="E [kJ/mol]")
     + guides(
-      color=guide_legend(title="System", position="top", override_aes={'fill': None, 'size': 3}),
+      color=guide_legend(title="System", position="top", override_aes={'fill': None, 'size': 1.5}),
       fill=False
     )
 )
@@ -841,7 +833,6 @@ just Ala845-Gly846, Gly840-Ala841, Hyp851-Gly852
 ```{python}
 df = break_protons.query("resnames in ['Ala845-Gly846', 'Gly840-Ala841', 'Hyp851-Gly852']")
 ```
-
 
 ```{python}
 p = (
@@ -862,6 +853,10 @@ p = (
     + scale_x_continuous(limits=(0.14, 0.5))
     + scale_y_continuous(breaks=np.arange(0, 4, 0.5), limits=(0, 3)) # pyright: ignore
     + theme(legend_position="top")
+    + guides(
+      color=guide_legend(position="top", override_aes={'fill': None, 'size': 1.5}),
+      fill=False
+    )
 )
 p.save("./plots/wetbreak_us_tiprots_example.png", dpi=DPI, width=double_column*6/10, height=double_column*1/3)
 p.save("./plots/wetbreak_us_tiprots_example.svg", dpi=72, width=double_column*6/10, height=double_column*1/3)
@@ -877,7 +872,7 @@ df.ix_c.unique()
 print unique ix_c and frame combinations to extract example trajectories later
 
 ```{python}
-df[["ix_c", "frame"]].drop_duplicates().sort_values(by=["ix_c", "frame"]).reset_index(drop=True)
+df[["ix_c", "frame"]].drop_duplicates().sort_values(by=["ix_c", "frame"]).reset_index(drop=True) # pyright: ignore
 ```
 
 # Misc
