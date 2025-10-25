@@ -62,6 +62,8 @@ dd_dump_err*.pdb
 *.xtc_offsets.npz
 *.tga
 *.ppm
+*.ppm2
+*.ppmr
 *_files/
 .Rhistory
 *_cache/
