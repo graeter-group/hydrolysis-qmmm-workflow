@@ -216,8 +216,6 @@ with pushd(cwd):
 
 Chose starting frames per system and environment
 that worked well for the hydrolysis attack.
-See [./analysis/04-hyd-us.qmd]
-
 
 ### Start
 
@@ -227,7 +225,6 @@ outcomes = wf.check_wethyd_outcomes(envs)
 
 ```{python}
 outcomes = pd.read_csv("./data/results/wethyd_outcomes.csv")
-outcomes
 ```
 
 ```{python}
