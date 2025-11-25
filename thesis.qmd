@@ -125,6 +125,7 @@ prof = result["wethyd_us_prof"]
 hist_comb, prof_comb = result["wethyd_us_comb"]
 prof_comb: pd.DataFrame
 hist_comb: pd.DataFrame
+prof_comb['resnames'] = prof_comb['resname_c'] + "-" + prof_comb['resname_n']
 
 hist_break, prof_break = result["wetbreak_us_comb"]
 prof_break: pd.DataFrame
@@ -595,7 +596,6 @@ prof_comb = prof_comb.query("E.notna() and E != 0.0")
 prof_comb["E"] = prof_comb.groupby(["resname_c", "resname_n", "ix_c", "ix_n", "system"])["E"].transform(
     lambda x: x - x[(prof_comb["x"] > base_x - base_w) & (prof_comb["x"] < base_x + base_w)].mean()
 )
-prof_comb['resnames'] = prof_comb['resname_c'] + "-" + prof_comb['resname_n']
 
 p = (
     ggplot(prof_comb, aes(x="x", y="E", color="system", group="system"))
@@ -682,9 +682,17 @@ should be the same as two sample related t-test
 stats.ttest_1samp(ddE['ddE'], 0, alternative='greater')
 ```
 
-See <https://plotnine.org/reference/guide_colorbar.html> for colorbar and svg reasoning.
+summary of ddG
 
 ```{python}
+mean = ddE['ddE'].mean()
+sem = ddE['ddE'].sem()
+print(f"Mean ddE: {mean:.2f} kJ/mol")
+print(f"SEM ddE: {sem:.2f} kJ/mol")
+```
+
+```{python}
+# See <https://plotnine.org/reference/guide_colorbar.html> for colorbar and svg reasoning.
 p = (
     ggplot(df, aes(x="system", y="delta_E"))
     # + geom_line(aes(group='resnames'), color='black', alpha=0.5)
