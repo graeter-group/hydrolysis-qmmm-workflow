@@ -618,6 +618,28 @@ p.save("./plots/wethyd_us_profiles.svg", dpi=DPI, width=double_column, height=do
 p.show()
 ```
 
+```{python}
+p = (
+    ggplot(prof_comb, aes(x="x", y="E", color="system", group="system"))
+    + geom_rect(aes(xmin=ts_x - ts_w, xmax=ts_x + ts_w, ymin=-np.inf, ymax=np.inf), fill=HITS_CYAN_LIGHT, alpha=0.01, inherit_aes=False)
+    + geom_rect(aes(xmin=ti_x - ti_w, xmax=ti_x + ti_w, ymin=-np.inf, ymax=np.inf), fill=MPI_DARK_GREY, alpha=0.01, inherit_aes=False)
+    + geom_ribbon(aes(ymin="E-dE", ymax="E+dE", fill='system'), alpha=0.4, color=None, outline_type='full')
+    + geom_line()
+    # + geom_point(size=0.5, show_legend=False)
+    + facet_wrap("~resnames")
+    + scale_color_manual(values={"single": "black", "triple": MPI_GREEN})
+    + scale_fill_manual(values={"single": "black", "triple": MPI_GREEN})
+    + labs(x=r"$\text{d}~[\text{nm}]$", y=r"$\Delta$G [kJ/mol]")
+    + guides(
+      color=guide_legend(title="System", position="top", override_aes={'fill': None, 'size': 1.5}),
+      fill=False
+    )
+)
+p.save("./plots/wethyd_us_profiles-labelpos.png", dpi=DPI, width=double_column, height=double_column*0.63)
+p.save("./plots/wethyd_us_profiles-labelpos.svg", dpi=DPI, width=double_column, height=double_column*0.63)
+p.show()
+```
+
 
 ```{python}
 dE_to_ti = prof_comb.groupby(["resnames", "resname_c", "resname_n", "system"]).apply( # pyright: ignore
