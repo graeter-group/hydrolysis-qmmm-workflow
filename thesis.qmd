@@ -960,6 +960,52 @@ p.save("./plots/wetbreak_us_profiles_example.svg", dpi=DPI, width=double_column*
 p.show()
 ```
 
+Energy barriers for the break
+
+
+```{python}
+ts2_x = 0.23
+ts2_w = 0.05
+
+# discard incomplete profiles
+incomplete = [('Gly855-Pro856', 'triple'), ('Hyp856-Gly857', 'triple'), ('Ser850-Gly851', 'triple'), ('Gly842-Leu843', 'single')]
+prof_break_filtered: pd.DataFrame = prof_break[~prof_break.set_index(['resnames', 'system']).index.isin(incomplete)] # pyright: ignore
+
+p = (
+    ggplot(prof_break_filtered, aes(x="x", y="E", color="system", group="system"))
+    + geom_rect(aes(xmin=ts2_x - ts2_w, xmax=ts2_x + ts2_w, ymin=-np.inf, ymax=np.inf),
+    data=prof_break,
+    fill=HITS_CYAN_LIGHT, alpha=0.01, inherit_aes=False)
+    + geom_ribbon(aes(ymin="E-dE", ymax="E+dE", fill='system'), alpha=0.4, color=None, outline_type='full')
+    + geom_line()
+    + geom_point()
+    + facet_wrap("~resnames")
+    + scale_color_manual(values={"single": "black", "triple": MPI_GREEN})
+    + scale_fill_manual(values={"single": "black", "triple": MPI_GREEN})
+    + labs(x=r"$\text{d}~[\text{nm}]$", y="E [kJ/mol]")
+)
+p.save("./plots/wetbreak_us_profiles_highlight.png", dpi=DPI, width=double_column, height=double_column*0.75)
+p.save("./plots/wetbreak_us_profiles_highlight.svg", dpi=DPI, width=double_column, height=double_column*0.75)
+p.show()
+```
+
+```{python}
+dE_break = prof_break_filtered.groupby(["resnames", "resname_c", "resname_n", "ix_c", "ix_n", "system"]).apply( # pyright: ignore
+    lambda x: x.query("x > @ts2_x - @ts2_w and x < @ts2_x + @ts2_w")["E"].max(),
+    include_groups=False
+).reset_index(name="delta_E")
+dE_break = dE_break.dropna(subset=['delta_E'])
+print(dE_break['delta_E'].mean())
+print(dE_break['delta_E'].sem())
+```
+
+compared to the TS1 barriers
+
+```{python}
+print(dE_to_ts1['delta_E'].mean())
+print(dE_to_ts1['delta_E'].sem())
+```
+
 ## Protonation States during Break
 
 just Ala845-Gly846, Gly840-Ala841, Hyp851-Gly852
