@@ -161,8 +161,8 @@ p = (
   + geom_line()
   + labs(x = "time [ps]", y = "distance [nm]")
 )
-p.show()
 p.save("./plots/triple_equilibration.png", dpi=DPI, width=single_column, height=single_column*0.6)
+p.show()
 ```
 
 ## WIP
@@ -640,7 +640,6 @@ p.save("./plots/wethyd_us_profiles-labelpos.svg", dpi=DPI, width=double_column, 
 p.show()
 ```
 
-
 ```{python}
 dE_to_ti = prof_comb.groupby(["resnames", "resname_c", "resname_n", "system"]).apply( # pyright: ignore
     lambda x: x.query("x > @ti_x - @ti_w and x < @ti_x + @ti_w")["E"].min() - x.query("x > @base_x - @base_w and x < @base_x + @base_w")["E"].mean(),
@@ -657,8 +656,25 @@ dE_to_ts1 = dE_to_ts1.dropna(subset=['delta_E'])
 dE_to_ts1 = dE_to_ts1.groupby("resnames").filter(lambda x: x['system'].nunique() == 2).reset_index(drop=True)
 dE_to_ts1_single = dE_to_ts1.query("system == 'single'").reset_index(drop=True)
 dE_to_ts1_triple = dE_to_ts1.query("system == 'triple'").reset_index(drop=True)
-```
 
+dE_to_ts1["marker-pro"] = dE_to_ts1.apply(
+    lambda x: "C" if "Pro" in x["resname_c"] or "Hyp" in x["resname_c"] else ("N" if "Pro" in x["resname_n"] or "Hyp" in x["resname_n"] else "none"),
+    axis=1
+)
+dE_to_ts1["marker-gly"] = dE_to_ts1.apply(
+    lambda x: "C" if "Gly" in x["resname_c"] or "Hyp" in x["resname_c"] else ("N" if "Gly" in x["resname_n"] or "Hyp" in x["resname_n"] else "none"),
+    axis=1
+)
+
+dE_to_ti["marker-pro"] = dE_to_ti.apply(
+    lambda x: "C" if "Pro" in x["resname_c"] or "Hyp" in x["resname_c"] else ("N" if "Pro" in x["resname_n"] or "Hyp" in x["resname_n"] else "none"),
+    axis=1
+)
+dE_to_ti["marker-gly"] = dE_to_ti.apply(
+    lambda x: "C" if "Gly" in x["resname_c"] or "Hyp" in x["resname_c"] else ("N" if "Gly" in x["resname_n"] or "Hyp" in x["resname_n"] else "none"),
+    axis=1
+)
+```
 
 ### dE TS1
 
@@ -695,6 +711,7 @@ ddE = df.groupby(["resnames", "ix_c"]).apply( # pyright: ignore
     lambda x: x.query("system == 'triple'")["delta_E"].values[0] - x.query("system == 'single'")["delta_E"].values[0],
     include_groups=False
 ).reset_index(name="ddE")
+
 df = df.join(ddE.set_index(['resnames', 'ix_c']), on=['resnames', "ix_c"], how='left')
 ```
 
@@ -735,6 +752,49 @@ p.save("./plots/wethyd_us_deltaE_comparison.svg", dpi=72, width=single_column, h
 p.show()
 ```
 
+#### AA specific comparison
+
+```{python}
+df: pd.DataFrame = dE_to_ts1.copy()
+
+c_gly = df.query("`marker-gly` == 'C'")
+n_gly = df.query("`marker-gly` == 'N'")
+stats.ttest_ind(c_gly['delta_E'], n_gly['delta_E'])
+
+p = (
+    ggplot(df, aes(x="marker-gly", y="delta_E"))
+    # + geom_line(aes(group='resnames'), color='black', alpha=0.5)
+    # + geom_line(aes(group='resnames', color='ddE'), size=1.5)
+    + geom_jitter(size=3, width=0.1, fill=HITS_CYAN_LIGHT)
+    + labs(y=r"$\Delta$G (kJ/mol)", x="Glycine position")
+    + scale_y_continuous(limits=(0, 180))
+    + scale_color_gradient2(low=HITS_DARKBLUE, mid="white", high=HITS_MAGENTA, midpoint=0, name=r"$\Delta\Delta$G (kJ/mol)")
+    + guides(color=guide_colorbar(
+      display='raster'
+    ))
+)
+p.save("./plots/wethyd_us_deltaE_comparison-gly.png", dpi=DPI, width=single_column, height=single_column*0.75)
+p.save("./plots/wethyd_us_deltaE_comparison-gly.svg", dpi=72, width=single_column, height=single_column*0.75)
+p.show()
+```
+
+```{python}
+p = (
+    ggplot(df, aes(x="marker-pro", y="delta_E"))
+    # + geom_line(aes(group='resnames'), color='black', alpha=0.5)
+    # + geom_line(aes(group='resnames', color='ddE'), size=1.5)
+    + geom_jitter(size=3, width=0.1, fill=HITS_CYAN_LIGHT)
+    + labs(y=r"$\Delta$G (kJ/mol)", x="Proline position")
+    + scale_y_continuous(limits=(0, 180))
+    + scale_color_gradient2(low=HITS_DARKBLUE, mid="white", high=HITS_MAGENTA, midpoint=0, name=r"$\Delta\Delta$G (kJ/mol)")
+    + guides(color=guide_colorbar(
+      display='raster'
+    ))
+)
+p.save("./plots/wethyd_us_deltaE_comparison-pro.png", dpi=DPI, width=single_column, height=single_column*0.75)
+p.save("./plots/wethyd_us_deltaE_comparison-pro.svg", dpi=72, width=single_column, height=single_column*0.75)
+p.show()
+```
 
 ### dE TI
 
@@ -768,6 +828,50 @@ p = (
 )
 p.save("./plots/wethyd_us_deltaE_comparison_ti.png", dpi=DPI, width=single_column, height=single_column*0.75)
 p.save("./plots/wethyd_us_deltaE_comparison_ti.svg", dpi=72, width=single_column, height=single_column*0.75)
+p.show()
+```
+
+#### AA specific comparison
+
+```{python}
+df: pd.DataFrame = dE_to_ti.copy()
+
+c_gly = df.query("`marker-gly` == 'C'")
+n_gly = df.query("`marker-gly` == 'N'")
+stats.ttest_ind(c_gly['delta_E'], n_gly['delta_E'])
+
+p = (
+    ggplot(df, aes(x="marker-gly", y="delta_E"))
+    # + geom_line(aes(group='resnames'), color='black', alpha=0.5)
+    # + geom_line(aes(group='resnames', color='ddE'), size=1.5)
+    + geom_jitter(size=3, width=0.1, fill=MPI_DARK_GREY)
+    + labs(y=r"$\Delta$G (kJ/mol)", x="Glycine position")
+    + scale_y_continuous(limits=(0, 180))
+    + scale_color_gradient2(low=HITS_DARKBLUE, mid="white", high=HITS_MAGENTA, midpoint=0, name=r"$\Delta\Delta$G (kJ/mol)")
+    + guides(color=guide_colorbar(
+      display='raster'
+    ))
+)
+p.save("./plots/wethyd_us_deltaE_comparison_ti-gly.png", dpi=DPI, width=single_column, height=single_column*0.75)
+p.save("./plots/wethyd_us_deltaE_comparison_ti-gly.svg", dpi=72, width=single_column, height=single_column*0.75)
+p.show()
+```
+
+```{python}
+p = (
+    ggplot(df, aes(x="marker-pro", y="delta_E"))
+    # + geom_line(aes(group='resnames'), color='black', alpha=0.5)
+    # + geom_line(aes(group='resnames', color='ddE'), size=1.5)
+    + geom_jitter(size=3, width=0.1, fill=MPI_DARK_GREY)
+    + labs(y=r"$\Delta$G (kJ/mol)", x="Proline position")
+    + scale_y_continuous(limits=(0, 180))
+    + scale_color_gradient2(low=HITS_DARKBLUE, mid="white", high=HITS_MAGENTA, midpoint=0, name=r"$\Delta\Delta$G (kJ/mol)")
+    + guides(color=guide_colorbar(
+      display='raster'
+    ))
+)
+p.save("./plots/wethyd_us_deltaE_comparison_ti-pro.png", dpi=DPI, width=single_column, height=single_column*0.75)
+p.save("./plots/wethyd_us_deltaE_comparison_ti-pro.svg", dpi=72, width=single_column, height=single_column*0.75)
 p.show()
 ```
 
