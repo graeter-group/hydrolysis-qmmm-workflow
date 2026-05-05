@@ -461,6 +461,8 @@ p: ggplot = tiprot_plot(tiprots_raw)
 p.show()
 ```
 
+Also looking at the peptide N
+
 ```{python}
 p: ggplot = tiprot_plot(df=tiprots_raw, include_N=True)
 p.show()
@@ -491,8 +493,15 @@ tiprots['label'] = r"$\text{n}_{\text{H}^+}$ at " + tiprots['type'].astype(str)
 
 ```{python}
 p = tiprot_plot(tiprots)
-p.save("./plots/wethyd_us_tiprots_filtered.png", dpi=DPI, width=double_column, height=double_column*0.75)
-p.save("./plots/wethyd_us_tiprots_filtered.svg", dpi=DPI, width=double_column, height=double_column*0.75)
+# p.save("./plots/wethyd_us_tiprots_filtered.png", dpi=DPI, width=double_column, height=double_column*0.75)
+# p.save("./plots/wethyd_us_tiprots_filtered.svg", dpi=DPI, width=double_column, height=double_column*0.75)
+p.show()
+```
+
+Including N:
+
+```{python}
+p: ggplot = tiprot_plot(df=tiprots, include_N=True)
 p.show()
 ```
 
@@ -504,6 +513,7 @@ p.save("./plots/wethyd_us_tiprots_filtered_example.png", dpi=DPI, width=single_c
 p.save("./plots/wethyd_us_tiprots_filtered_example.svg", dpi=DPI, width=single_column, height=single_column*0.75)
 p.show()
 ```
+
 
 ### Combined Protonation Single vs Triple
 
