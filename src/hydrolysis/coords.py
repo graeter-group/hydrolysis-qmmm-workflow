@@ -1,8 +1,8 @@
 import os
 import numpy as np
-from src.parsing import Gro
-from src.units import *
-from src.constants import N_QW, QM_WATER_CUTOFF
+from hydrolysis.parsing import Gro
+from hydrolysis.units import *
+from hydrolysis.constants import N_QW, QM_WATER_CUTOFF
 from math import degrees, sqrt
 import logging
 

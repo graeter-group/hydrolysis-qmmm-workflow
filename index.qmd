@@ -30,14 +30,14 @@ chain-c has 45 residues plus caps.
 from tqdm import tqdm
 import pandas as pd
 import os
-import src.steps as st
-import src.workflows as wf
-import src.analysis_utils as au
-import src.utils as ut
-import src.operations as op
-from src.analysis import NEW_IXS_C
+import hydrolysis.steps as st
+import hydrolysis.workflows as wf
+import hydrolysis.analysis_utils as au
+import hydrolysis.utils as ut
+import hydrolysis.operations as op
+from hydrolysis.analysis import NEW_IXS_C
 import logging
-from src.utils import pushd, read_env
+from hydrolysis.utils import pushd, read_env
 
 remote=True
 ut.activate_mpl(remote=remote)

@@ -9,11 +9,11 @@ from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
 
-import src.operations as op
-import src.utils as ut
-from src import mdatools
-from src.settings import N_FRAMES, derive_env_dirs, get_parameters, ASSETS
-from src.utils import (
+import hydrolysis.operations as op
+import hydrolysis.utils as ut
+from hydrolysis import mdatools
+from hydrolysis.settings import N_FRAMES, derive_env_dirs, get_parameters, ASSETS
+from hydrolysis.utils import (
     Result,
     check_logfiles_for_errors,
     link,

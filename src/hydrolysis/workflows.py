@@ -1,8 +1,8 @@
 import pandas as pd
 from tqdm import tqdm
 
-import src.steps as st
-from src.settings import HYD_ATTACK_CUTOFF
+import hydrolysis.steps as st
+from hydrolysis.settings import HYD_ATTACK_CUTOFF
 
 
 def check_wethyd_outcomes(envs):

@@ -1,11 +1,11 @@
 import logging
 import numpy as np
-from src.constants import N_QW, QM_WATER_CUTOFF
-from src.parsing import GroAtom, read_gro
+from hydrolysis.constants import N_QW, QM_WATER_CUTOFF
+from hydrolysis.parsing import GroAtom, read_gro
 import pytest
 from math import isclose, sqrt
-from src.coords import find_qm_waters_and_oh, normalize
-from src.units import *
+from hydrolysis.coords import find_qm_waters_and_oh, normalize
+from hydrolysis.units import *
 
 logger = logging.getLogger(__name__)
 

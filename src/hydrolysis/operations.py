@@ -17,14 +17,14 @@ from kimmdy.parsing import read_top, write_top
 from kimmdy.topology.utils import get_top_section, set_top_section
 from tqdm import tqdm
 
-from src.parsing import read_gro, write_gro
-import src.utils as ut
-from src.constants import N_QW, QM_WATER_CUTOFF, TI_TARGET_DISTANCE
-from src.settings import ASSETS
-from src.mdatools import find_offset_chain
-from src.coords import find_qm_waters_and_oh
-from src.units import A
-from src.utils import (
+from hydrolysis.parsing import read_gro, write_gro
+import hydrolysis.utils as ut
+from hydrolysis.constants import N_QW, QM_WATER_CUTOFF, TI_TARGET_DISTANCE
+from hydrolysis.settings import ASSETS
+from hydrolysis.mdatools import find_offset_chain
+from hydrolysis.coords import find_qm_waters_and_oh
+from hydrolysis.units import A
+from hydrolysis.utils import (
     Result,
     cp2k_reference_to_inp,
     fill_template,

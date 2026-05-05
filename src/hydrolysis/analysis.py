@@ -11,8 +11,8 @@ from typing import Any
 import pandas as pd
 from hamilton.function_modifiers.metadata import cache
 
-import src.steps as st
-from src.analysis_utils import (
+import hydrolysis.steps as st
+from hydrolysis.analysis_utils import (
     ix_to_resname,
     read_distances,
     read_timestamp,
@@ -23,8 +23,8 @@ from src.analysis_utils import (
     analyse_break_protons_frame,
     analyse_us_comb,
 )
-from src.settings import N_FRAMES
-from src.utils import read_xvg
+from hydrolysis.settings import N_FRAMES
+from hydrolysis.utils import read_xvg
 
 logging.basicConfig(
     level=logging.INFO,

@@ -1,4 +1,4 @@
-from src.utils import Error, check_logfiles_for_errors, pushd, LogCheckResult
+from hydrolysis.utils import Error, check_logfiles_for_errors, pushd, LogCheckResult
 
 
 def test_logfile_checks_for_errors():

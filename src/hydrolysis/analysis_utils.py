@@ -2,8 +2,8 @@ import pandas as pd
 import os
 from pathlib import Path
 
-from src.utils import read_xvg, pushd, read_env
-from src.constants import N_QW, HBOND
+from hydrolysis.utils import read_xvg, pushd, read_env
+from hydrolysis.constants import N_QW, HBOND
 from datetime import datetime
 from numpy import Inf
 import logging

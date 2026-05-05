@@ -21,12 +21,12 @@ import pandas as pd
 import numpy as np
 from hamilton import driver
 import scipy.stats as stats
-import src.analysis as analysis
-from src.analysis_utils import ix_cols
-import src.analysis_utils as au
-import src.steps as st
-from src.constants import HAMILTON_CACHE
-from src.style import (
+import hydrolysis.analysis as analysis
+from hydrolysis.analysis_utils import ix_cols
+import hydrolysis.analysis_utils as au
+import hydrolysis.steps as st
+from hydrolysis.constants import HAMILTON_CACHE
+from hydrolysis.style import (
     HITS_CYAN_LIGHT,
     HITS_DARKBLUE,
     HITS_GREEN,
@@ -40,7 +40,7 @@ from src.style import (
     single_column,
     double_column,
 )
-from src.analysis import NEW_IXS_C
+from hydrolysis.analysis import NEW_IXS_C
 _ = NEW_IXS_C
 
 import logging
