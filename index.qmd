@@ -182,7 +182,6 @@ job = 'wethyd'
 choices = wethyd_choices.query("ix_c == 329 and system == 'single'").reset_index()
 ```
 
-TODO: what is up ix_c 329 single?
 example for substitution reaction we don't want to sample
 ix_c 329, frame 98, single
 

@@ -170,6 +170,7 @@ def analyse_wethyd_us_frame(cwd: str) -> pd.DataFrame:
             )
             return frame
 
+        # includes the N of the peptide bond as a proton acceptor
         ids_o = [
             int(x) for x in
             read(path_sel_o)[0]
@@ -202,10 +203,12 @@ def analyse_wethyd_us_frame(cwd: str) -> pd.DataFrame:
         ix_c_carbonyl = int(env["ix_c_carbonyl"])
         ix_o_carbonyl = int(env["ix_o_carbonyl"])
         ix_o_oh = int(env["ix_o_oh"])
+        ix_n_peptide = int(env["ix_n_peptide"])
 
         id_c_carbonyl = ix_c_carbonyl + 1
         id_o_carbonyl = ix_o_carbonyl + 1
         id_o_oh = ix_o_oh + 1
+        id_n_peptide = ix_n_peptide + 1
 
         for conf_t, conf_d in ts_ds:
             job = f"wethyd-conf-{conf_t}"
@@ -267,7 +270,8 @@ def analyse_wethyd_us_frame(cwd: str) -> pd.DataFrame:
                 l = {'time': time,
                      'n_h_oh': n_h_per_o[id_o_oh],
                      'n_h_oc': n_h_per_o[id_o_carbonyl],
-                     'n_h_qw': sum(n_h_per_o.values()) - n_h_per_o[id_o_oh] - n_h_per_o[id_o_carbonyl]
+                     'n_h_np': n_h_per_o[id_n_peptide],
+                     'n_h_qw': sum(n_h_per_o.values()) - n_h_per_o[id_o_oh] - n_h_per_o[id_o_carbonyl] - n_h_per_o[id_n_peptide]
                      }
                 ls.append(l)
 

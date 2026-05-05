@@ -1022,10 +1022,12 @@ def analyse_ti_proton_distances(force: bool = False) -> None:
     ixs_qw = env.get("ixs_qw")
     ixs_oh = env.get("ixs_oh")
     ix_o_carbonyl = env.get("ix_o_carbonyl")
+    ix_n_peptide = env.get("ix_n_peptide")
     n_qm_water = env.get("n_qm_water")
     assert ixs_qw, f"no ixs_qw in {cwd}"
     assert ixs_oh, f"no ixs_oh in {cwd}"
     assert ix_o_carbonyl, f"no ix_o_carbonyl in {cwd}"
+    assert ix_n_peptide, f"no ix_n_peptide in {cwd}"
     assert n_qm_water, f"no n_qm_water in {cwd}"
     # order is O,H1,H2 until 3*n_qm_water
     ids_o = []
@@ -1039,6 +1041,8 @@ def analyse_ti_proton_distances(force: bool = False) -> None:
             ids_h.append(id)
     ids_o.append(int(ixs_oh[0]) + 1)  # add O from original OH
     ids_o.append(int(ix_o_carbonyl) + 1) # add carbonyl O
+    ids_o.append(int(ix_n_peptide) + 1) # add peptide N to the proton acceptors
+
     ids_h.append(int(ixs_oh[1]) + 1)  # add H from original OH
 
     s = f"atomnr {' '.join(map(str, ids_o))};"
