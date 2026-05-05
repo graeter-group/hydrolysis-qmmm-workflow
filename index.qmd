@@ -263,10 +263,10 @@ au.write_timestamp("hyd-us")
 ```
 
 ```{python}
-st.analyse_wethyd_us_energies(wethyd_choices, force=False)
-st.analyse_ti_proton_distances(choices=wethyd_choices, force=False)
-st.analyse_ti_protonation(choices=wethyd_choices, force=False)
-st.analyse_ti_stability(choices=wethyd_choices, force=False)
+# st.analyse_wethyd_us_energies(wethyd_choices, force=False)
+st.analyse_ti_all_proton_distances(choices=wethyd_choices, force=False)
+# st.analyse_ti_carbonyl_proton_distances(choices=wethyd_choices, force=False)
+# st.analyse_ti_stability(choices=wethyd_choices, force=False)
 au.write_timestamp("hyd-energies")
 ```
 

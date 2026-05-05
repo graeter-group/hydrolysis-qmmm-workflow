@@ -1012,7 +1012,7 @@ def center_xtc(job: str, force: bool = False) -> Result:
     return Result.OK
 
 
-def analyse_ti_proton_distances(force: bool = False) -> None:
+def analyse_ti_all_proton_distances(force: bool = False) -> None:
     env = read_env()
     cwd = os.getcwd()
     parentjob = "wethyd"
@@ -1044,6 +1044,7 @@ def analyse_ti_proton_distances(force: bool = False) -> None:
     ids_o.append(int(ix_n_peptide) + 1) # add peptide N to the proton acceptors
 
     ids_h.append(int(ixs_oh[1]) + 1)  # add H from original OH
+    ids_h.append(int(ix_n_peptide) + 1 + 1) # add H from peptide N
 
     s = f"atomnr {' '.join(map(str, ids_o))};"
     with open("protdist-o.sel", "w") as f:
@@ -1069,9 +1070,11 @@ def analyse_ti_proton_distances(force: bool = False) -> None:
         except sp.CalledProcessError as e:
             logger.error(f"Error running pairdist: {e}")
 
-def analyse_ti_protonation(force: bool = False) -> None:
+def analyse_ti_carbonyl_proton_distances(force: bool = False) -> None:
     """
     uses <https://manual.gromacs.org/documentation/current/onlinehelp/gmx-pairdist.html>
+
+    The distance to the closest proton for the carbonyl O to check what stabilizes it.
     """
     cwd = os.getcwd()
     env = read_env()
@@ -1135,6 +1138,8 @@ def analyse_ti_protonation(force: bool = False) -> None:
 def analyse_ti_stability(force: bool = False) -> None:
     """
     uses <https://manual.gromacs.org/documentation/current/onlinehelp/gmx-pairdist.html>
+
+    Check if the original carbonyl C=O interaction is maintained during the TI simulations by measuring the distance between the carbonyl carbon and oxygen and the hydroxyl oxygen of the attacking water.
     """
     cwd = os.getcwd()
     env = read_env()

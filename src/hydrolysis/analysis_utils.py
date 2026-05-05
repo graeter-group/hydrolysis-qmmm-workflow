@@ -618,14 +618,14 @@ def melt_tiprots(tiprots: pd.DataFrame) -> pd.DataFrame:
     """Melt the tiprots dataframe to long format."""
     df = tiprots.melt(
         id_vars=ix_cols,
-        value_vars=["n_h_oh", "n_h_oc", "n_h_qw"],
+        value_vars=["n_h_oh", "n_h_oc", "n_h_qw", "n_h_np"],
         var_name="type",
         value_name="n",
     )
     df = df.query("type != 'n_h_qw'")
     df = apply_group_names(df)
 # better name for the categories
-    df['type'] = df['type'].map({'n_h_oh': 'hydroxyl O', 'n_h_oc': 'carbonyl O'}) # pyright: ignore
+    df['type'] = df['type'].map({'n_h_oh': 'hydroxyl O', 'n_h_oc': 'carbonyl O', 'n_h_np': 'peptide N'}) # pyright: ignore
     df['type'] = df['type'].astype("category")
     return df
 

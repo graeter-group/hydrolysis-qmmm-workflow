@@ -427,13 +427,17 @@ Umbrella windows.
 Without discarding this looks like this:
 
 ```{python}
-tiprots_raw = energies.groupby(ix_cols)[["n_h_oh", "n_h_oc", "n_h_qw"]].mean().reset_index()
+tiprots_raw = energies.groupby(ix_cols)[["n_h_oh", "n_h_oc", "n_h_qw", "n_h_np"]].mean().reset_index()
 tiprots_raw = au.melt_tiprots(tiprots_raw)
 ```
 
 ```{python}
-def tiprot_plot(df: pd.DataFrame) -> ggplot:
+def tiprot_plot(df: pd.DataFrame, include_N: bool=False) -> ggplot:
     """Plot the tiprot data."""
+    if not include_N:
+      df = df.query("type != 'peptide N'")
+      # drop unused levels of type
+      df['type'] = df['type'].cat.remove_unused_categories()
     p = (
         ggplot(df, aes(x="conf_d", y="n"))
         + geom_line(aes(group='group', color='type'), alpha=0.3)
@@ -451,9 +455,14 @@ def tiprot_plot(df: pd.DataFrame) -> ggplot:
 ```
 
 ```{python}
-p = tiprot_plot(tiprots_raw)
-p.save("./plots/wethyd_us_tiprots_no_filter.png", dpi=DPI, width=double_column, height=double_column*0.75)
-p.save("./plots/wethyd_us_tiprots_no_filter.svg", dpi=DPI, width=double_column, height=double_column*0.75)
+p: ggplot = tiprot_plot(tiprots_raw)
+# p.save("./plots/wethyd_us_tiprots_no_filter.png", dpi=DPI, width=double_column, height=double_column*0.75)
+# p.save("./plots/wethyd_us_tiprots_no_filter.svg", dpi=DPI, width=double_column, height=double_column*0.75)
+p.show()
+```
+
+```{python}
+p: ggplot = tiprot_plot(df=tiprots_raw, include_N=True)
 p.show()
 ```
 
@@ -475,7 +484,7 @@ p.show()
 But with filtering out the bad trajectories it looks like this:
 
 ```{python}
-tiprots = energies.query(filter_to_keep).groupby(ix_cols)[["n_h_oh", "n_h_oc", "n_h_qw"]].mean().reset_index()
+tiprots = energies.query(filter_to_keep).groupby(ix_cols)[["n_h_oh", "n_h_oc", "n_h_qw", "n_h_np"]].mean().reset_index()
 tiprots = au.melt_tiprots(tiprots)
 tiprots['label'] = r"$\text{n}_{\text{H}^+}$ at " + tiprots['type'].astype(str)
 ```
