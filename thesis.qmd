@@ -1006,6 +1006,43 @@ print(dE_to_ts1['delta_E'].mean())
 print(dE_to_ts1['delta_E'].sem())
 ```
 
+Plot like TS1 barriers
+
+
+```{python}
+df: pd.DataFrame = dE_break.copy()
+df['resnames'] = df['resname_c'] + "-" + df['resname_n']
+
+# add dE of TS1 for comparison
+dE_ts1 = dE_to_ts1.groupby(["resnames", "system"]).apply( # pyright: ignore
+    lambda x: x["delta_E"].values[0],
+    include_groups=False
+).reset_index(name="delta_E_ts1")
+df = df.join(dE_ts1.set_index(['resnames', 'system']), on=['resnames', 'system'], how='left')
+
+
+# See <https://plotnine.org/reference/guide_colorbar.html> for colorbar and svg reasoning.
+p = (
+    ggplot(df, aes(x="system", y="delta_E"))
+    # + geom_line(aes(group='resnames'), color='black', alpha=0.5)
+    # + geom_line(aes(group='resnames', color='ddE'), size=1.5)
+    + geom_point(size=3, fill=HITS_CYAN_LIGHT)
+    + geom_point(aes(y="delta_E_ts1"), size=3, fill=MPI_DARK_GREY, shape='X')
+    # + annotate("segment", x=1, xend=2, y=160, yend=160, color='black', size=1.1)
+    # + annotate("text", label=r"*", x=1.5, y=160, va='bottom', color='black', fontweight='bold', size=10, ha='center')
+    # + annotate("text", label=rf"p-value: {pvalue}", x=1.5, y=160, va='bottom', color='black', fontweight='bold', size=10, ha='center')
+    + labs(y=r"$\Delta$G (kJ/mol)", x="")
+    + scale_y_continuous(limits=(0, 180))
+    + scale_color_gradient2(low=HITS_DARKBLUE, mid="white", high=HITS_MAGENTA, midpoint=0, name=r"$\Delta\Delta$G (kJ/mol)")
+    + guides(color=guide_colorbar(
+      display='raster'
+    ))
+)
+p.save("./plots/wethyd_us_deltaE_ts2.png", dpi=DPI, width=single_column, height=single_column*0.75)
+# p.save("./plots/wethyd_us_deltaE_ts2.svg", dpi=72, width=single_column, height=single_column*0.75)
+p.show()
+```
+
 ## Protonation States during Break
 
 just Ala845-Gly846, Gly840-Ala841, Hyp851-Gly852
