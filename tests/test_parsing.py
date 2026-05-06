@@ -1,4 +1,4 @@
-from src.parsing import read_gro, write_gro
+from hydrolysis.parsing import read_gro, write_gro
 
 
 def test_read_gro(tmp_path):

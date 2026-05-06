@@ -30,14 +30,14 @@ chain-c has 45 residues plus caps.
 from tqdm import tqdm
 import pandas as pd
 import os
-import src.steps as st
-import src.workflows as wf
-import src.analysis_utils as au
-import src.utils as ut
-import src.operations as op
-from src.analysis import NEW_IXS_C
+import hydrolysis.steps as st
+import hydrolysis.workflows as wf
+import hydrolysis.analysis_utils as au
+import hydrolysis.utils as ut
+import hydrolysis.operations as op
+from hydrolysis.analysis import NEW_IXS_C
 import logging
-from src.utils import pushd, read_env
+from hydrolysis.utils import pushd, read_env
 
 remote=True
 ut.activate_mpl(remote=remote)
@@ -182,7 +182,6 @@ job = 'wethyd'
 choices = wethyd_choices.query("ix_c == 329 and system == 'single'").reset_index()
 ```
 
-TODO: what is up ix_c 329 single?
 example for substitution reaction we don't want to sample
 ix_c 329, frame 98, single
 
@@ -264,10 +263,10 @@ au.write_timestamp("hyd-us")
 ```
 
 ```{python}
-st.analyse_wethyd_us_energies(wethyd_choices, force=False)
-st.analyse_ti_proton_distances(choices=wethyd_choices, force=False)
-st.analyse_ti_protonation(choices=wethyd_choices, force=False)
-st.analyse_ti_stability(choices=wethyd_choices, force=False)
+# st.analyse_wethyd_us_energies(wethyd_choices, force=False)
+st.analyse_ti_all_proton_distances(choices=wethyd_choices, force=True, parallel=True)
+# st.analyse_ti_carbonyl_proton_distances(choices=wethyd_choices, force=False)
+# st.analyse_ti_stability(choices=wethyd_choices, force=False)
 au.write_timestamp("hyd-energies")
 ```
 

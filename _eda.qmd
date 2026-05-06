@@ -14,10 +14,10 @@ import numpy as np
 from hamilton import driver
 from hamilton.caching.stores.sqlite import SQLiteMetadataStore
 from hamilton.caching.stores.file import FileResultStore
-import src.analysis as analysis
-import src.analysis_utils as au
-import src.style as style
-from src.utils import read_env, read_xvg, activate_mpl
+import hydrolysis.analysis as analysis
+import hydrolysis.analysis_utils as au
+import hydrolysis.style as style
+from hydrolysis.utils import read_env, read_xvg, activate_mpl
 import matplotlib.pyplot as plt
 import os
 

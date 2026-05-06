@@ -26,7 +26,7 @@ from cp2k_input_tools.parser import CP2KInputParserSimplified
 from MDAnalysis.coordinates.H5MD import mda
 from numpy import int64
 
-from src.constants import NO_WATER_FOUND
+from hydrolysis.constants import NO_WATER_FOUND
 
 CLUSTER = "cascade-login.h-its.org"
 

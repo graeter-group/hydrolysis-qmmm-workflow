@@ -19,11 +19,11 @@ from copy import deepcopy
 from functools import reduce
 from itertools import product
 from subprocess import CalledProcessError
-from src.settings import derive_env_dirs
-import src.steps as st
-from src.utils import get_job_status, pp, clean_all, pushd, read_env, sh, show_job_finished, show_job_ids, write_env
-import src.operations as op
-import src.utils as ut
+from hydrolysis.settings import derive_env_dirs
+import hydrolysis.steps as st
+from hydrolysis.utils import get_job_status, pp, clean_all, pushd, read_env, sh, show_job_finished, show_job_ids, write_env
+import hydrolysis.operations as op
+import hydrolysis.utils as ut
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from kimmdy.parsing import read_top, write_top

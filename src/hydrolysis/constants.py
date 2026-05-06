@@ -5,7 +5,7 @@
 # May need to get charge of the residue dynamically with mda.
 # but does this very by triple vs. single?
 # residue_charge = qm_atoms.accumulate('charges')
-from src.units import *
+from hydrolysis.units import *
 
 HAMILTON_CACHE = '/data/hamilton/'
 

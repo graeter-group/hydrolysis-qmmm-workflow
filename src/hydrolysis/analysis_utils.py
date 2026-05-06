@@ -2,8 +2,8 @@ import pandas as pd
 import os
 from pathlib import Path
 
-from src.utils import read_xvg, pushd, read_env
-from src.constants import N_QW, HBOND
+from hydrolysis.utils import read_xvg, pushd, read_env
+from hydrolysis.constants import N_QW, HBOND
 from datetime import datetime
 from numpy import Inf
 import logging
@@ -170,6 +170,7 @@ def analyse_wethyd_us_frame(cwd: str) -> pd.DataFrame:
             )
             return frame
 
+        # includes the N of the peptide bond as a proton acceptor
         ids_o = [
             int(x) for x in
             read(path_sel_o)[0]
@@ -202,10 +203,12 @@ def analyse_wethyd_us_frame(cwd: str) -> pd.DataFrame:
         ix_c_carbonyl = int(env["ix_c_carbonyl"])
         ix_o_carbonyl = int(env["ix_o_carbonyl"])
         ix_o_oh = int(env["ix_o_oh"])
+        ix_n_peptide = int(env["ix_n_peptide"])
 
         id_c_carbonyl = ix_c_carbonyl + 1
         id_o_carbonyl = ix_o_carbonyl + 1
         id_o_oh = ix_o_oh + 1
+        id_n_peptide = ix_n_peptide + 1
 
         for conf_t, conf_d in ts_ds:
             job = f"wethyd-conf-{conf_t}"
@@ -267,7 +270,8 @@ def analyse_wethyd_us_frame(cwd: str) -> pd.DataFrame:
                 l = {'time': time,
                      'n_h_oh': n_h_per_o[id_o_oh],
                      'n_h_oc': n_h_per_o[id_o_carbonyl],
-                     'n_h_qw': sum(n_h_per_o.values()) - n_h_per_o[id_o_oh] - n_h_per_o[id_o_carbonyl]
+                     'n_h_np': n_h_per_o[id_n_peptide],
+                     'n_h_qw': sum(n_h_per_o.values()) - n_h_per_o[id_o_oh] - n_h_per_o[id_o_carbonyl] - n_h_per_o[id_n_peptide]
                      }
                 ls.append(l)
 
@@ -614,14 +618,14 @@ def melt_tiprots(tiprots: pd.DataFrame) -> pd.DataFrame:
     """Melt the tiprots dataframe to long format."""
     df = tiprots.melt(
         id_vars=ix_cols,
-        value_vars=["n_h_oh", "n_h_oc", "n_h_qw"],
+        value_vars=["n_h_oh", "n_h_oc", "n_h_qw", "n_h_np"],
         var_name="type",
         value_name="n",
     )
     df = df.query("type != 'n_h_qw'")
     df = apply_group_names(df)
 # better name for the categories
-    df['type'] = df['type'].map({'n_h_oh': 'hydroxyl O', 'n_h_oc': 'carbonyl O'}) # pyright: ignore
+    df['type'] = df['type'].map({'n_h_oh': 'hydroxyl O', 'n_h_oc': 'carbonyl O', 'n_h_np': 'peptide N'}) # pyright: ignore
     df['type'] = df['type'].astype("category")
     return df
 

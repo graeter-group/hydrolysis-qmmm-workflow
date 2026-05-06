@@ -9,11 +9,11 @@ from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
 
-import src.operations as op
-import src.utils as ut
-from src import mdatools
-from src.settings import N_FRAMES, derive_env_dirs, get_parameters, ASSETS
-from src.utils import (
+import hydrolysis.operations as op
+import hydrolysis.utils as ut
+from hydrolysis import mdatools
+from hydrolysis.settings import N_FRAMES, derive_env_dirs, get_parameters, ASSETS
+from hydrolysis.utils import (
     Result,
     check_logfiles_for_errors,
     link,
@@ -758,20 +758,36 @@ def analyse_wethyd_us_energies(choices: pd.DataFrame, force=False):
 def analyse_wethyd_us_combined(choices: pd.DataFrame, to_discard: pd.DataFrame|None = None, force: bool=False):
     op.analyse_combined_us(parent_job="wethyd", choices=choices, to_discard=to_discard, force=force)
 
+def _proton_distances_in_dir(args: tuple[str, bool]):
+    cwd, force = args
+    with pushd(cwd):
+        logger.info(f"Analyse wethyd in {cwd}")
+        op.analyse_ti_all_proton_distances(force=force)
 
-def analyse_ti_proton_distances(choices: pd.DataFrame, force=False):
+def analyse_ti_all_proton_distances(choices: pd.DataFrame, force=False, parallel=True):
+    cwds = []
     for l in choices.itertuples():
         cwd = l.cwd  # type:ignore
-        with pushd(cwd):
-            logger.info(f"Analyse wethyd in {cwd}")
-            op.analyse_ti_proton_distances(force=force)
+        cwds.append(cwd)
 
-def analyse_ti_protonation(choices: pd.DataFrame, force=False):
+    if parallel:
+        with Pool(min(len(cwds), 10)) as p:
+            p.map(
+                _proton_distances_in_dir,
+                zip(cwds, repeat(force))
+            )
+    else:
+        for cwd in cwds:
+            with pushd(cwd):
+                logger.info(f"Analyse wethyd in {cwd}")
+                op.analyse_ti_all_proton_distances(force=force)
+
+def analyse_ti_carbonyl_proton_distances(choices: pd.DataFrame, force=False):
     for l in choices.itertuples():
         cwd = l.cwd  # type:ignore
         with pushd(cwd):
             logger.info(f"Analyse ti protonation in {cwd}")
-            op.analyse_ti_protonation(force=force)
+            op.analyse_ti_carbonyl_proton_distances(force=force)
 
 def analyse_ti_stability(choices: pd.DataFrame, force=False):
     for l in choices.itertuples():

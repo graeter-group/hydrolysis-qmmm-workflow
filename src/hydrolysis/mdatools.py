@@ -2,7 +2,7 @@ import logging
 
 import MDAnalysis as mda
 
-from src.constants import AA_CHARGE
+from hydrolysis.constants import AA_CHARGE
 
 logger = logging.getLogger("mdatools")
 

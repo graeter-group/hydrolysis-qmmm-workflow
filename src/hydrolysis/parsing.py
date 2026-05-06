@@ -1,6 +1,6 @@
 from math import sqrt
 from pathlib import Path
-from src.units import nm
+from hydrolysis.units import nm
 
 import logging
 

@@ -17,14 +17,14 @@ from kimmdy.parsing import read_top, write_top
 from kimmdy.topology.utils import get_top_section, set_top_section
 from tqdm import tqdm
 
-from src.parsing import read_gro, write_gro
-import src.utils as ut
-from src.constants import N_QW, QM_WATER_CUTOFF, TI_TARGET_DISTANCE
-from src.settings import ASSETS
-from src.mdatools import find_offset_chain
-from src.coords import find_qm_waters_and_oh
-from src.units import A
-from src.utils import (
+from hydrolysis.parsing import read_gro, write_gro
+import hydrolysis.utils as ut
+from hydrolysis.constants import N_QW, QM_WATER_CUTOFF, TI_TARGET_DISTANCE
+from hydrolysis.settings import ASSETS
+from hydrolysis.mdatools import find_offset_chain
+from hydrolysis.coords import find_qm_waters_and_oh
+from hydrolysis.units import A
+from hydrolysis.utils import (
     Result,
     cp2k_reference_to_inp,
     fill_template,
@@ -1012,7 +1012,7 @@ def center_xtc(job: str, force: bool = False) -> Result:
     return Result.OK
 
 
-def analyse_ti_proton_distances(force: bool = False) -> None:
+def analyse_ti_all_proton_distances(force: bool = False) -> None:
     env = read_env()
     cwd = os.getcwd()
     parentjob = "wethyd"
@@ -1022,10 +1022,12 @@ def analyse_ti_proton_distances(force: bool = False) -> None:
     ixs_qw = env.get("ixs_qw")
     ixs_oh = env.get("ixs_oh")
     ix_o_carbonyl = env.get("ix_o_carbonyl")
+    ix_n_peptide = env.get("ix_n_peptide")
     n_qm_water = env.get("n_qm_water")
     assert ixs_qw, f"no ixs_qw in {cwd}"
     assert ixs_oh, f"no ixs_oh in {cwd}"
     assert ix_o_carbonyl, f"no ix_o_carbonyl in {cwd}"
+    assert ix_n_peptide, f"no ix_n_peptide in {cwd}"
     assert n_qm_water, f"no n_qm_water in {cwd}"
     # order is O,H1,H2 until 3*n_qm_water
     ids_o = []
@@ -1039,7 +1041,10 @@ def analyse_ti_proton_distances(force: bool = False) -> None:
             ids_h.append(id)
     ids_o.append(int(ixs_oh[0]) + 1)  # add O from original OH
     ids_o.append(int(ix_o_carbonyl) + 1) # add carbonyl O
+    ids_o.append(int(ix_n_peptide) + 1) # add peptide N to the proton acceptors
+
     ids_h.append(int(ixs_oh[1]) + 1)  # add H from original OH
+    ids_h.append(int(ix_n_peptide) + 1 + 1) # add H from peptide N
 
     s = f"atomnr {' '.join(map(str, ids_o))};"
     with open("protdist-o.sel", "w") as f:
@@ -1065,9 +1070,11 @@ def analyse_ti_proton_distances(force: bool = False) -> None:
         except sp.CalledProcessError as e:
             logger.error(f"Error running pairdist: {e}")
 
-def analyse_ti_protonation(force: bool = False) -> None:
+def analyse_ti_carbonyl_proton_distances(force: bool = False) -> None:
     """
     uses <https://manual.gromacs.org/documentation/current/onlinehelp/gmx-pairdist.html>
+
+    The distance to the closest proton for the carbonyl O to check what stabilizes it.
     """
     cwd = os.getcwd()
     env = read_env()
@@ -1131,6 +1138,8 @@ def analyse_ti_protonation(force: bool = False) -> None:
 def analyse_ti_stability(force: bool = False) -> None:
     """
     uses <https://manual.gromacs.org/documentation/current/onlinehelp/gmx-pairdist.html>
+
+    Check if the original carbonyl C=O interaction is maintained during the TI simulations by measuring the distance between the carbonyl carbon and oxygen and the hydroxyl oxygen of the attacking water.
     """
     cwd = os.getcwd()
     env = read_env()

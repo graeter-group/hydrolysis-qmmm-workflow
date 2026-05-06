@@ -40,10 +40,8 @@ make preview  # Start Quarto preview server
 quarto preview  # Alternative preview command
 
 make docs  # Build full documentation with quartodoc and quarto
-quartodoc build && quartodoc interlinks && quarto render  # Full docs build
 
 make analysis  # Run Python Hamilton pipeline (replaces R targets)
-python scripts/run_analysis.py  # Alternative analysis command
 ```
 
 ### Development Utilities
