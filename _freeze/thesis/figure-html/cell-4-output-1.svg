@@ -14,71 +14,152 @@
 <polygon fill="#ffffff" stroke="black" points="50,-976 50,-1108 146,-1108 146,-976 50,-976"/>
 <text text-anchor="middle" x="98" y="-1092.8" font-family="Helvetica,sans-Serif" font-size="14.00">Legend</text>
 </g>
-<!-- wethyd_us_comb -->
+<!-- ts_hyd_us_comb -->
 <g id="node1" class="node">
+<title>ts_hyd_us_comb</title>
+<path fill="#b4d8e4" stroke="black" d="M159,-556C159,-556 37,-556 37,-556 31,-556 25,-550 25,-544 25,-544 25,-504 25,-504 25,-498 31,-492 37,-492 37,-492 159,-492 159,-492 165,-492 171,-498 171,-504 171,-504 171,-544 171,-544 171,-550 165,-556 159,-556"/>
+<text text-anchor="start" x="36" y="-534.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">ts_hyd_us_comb</text>
+<text text-anchor="start" x="88.5" y="-506.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">str</text>
+</g>
+<!-- wethyd_us_comb -->
+<g id="node9" class="node">
 <title>wethyd_us_comb</title>
 <path fill="#ffc857" stroke="black" d="M375.5,-556C375.5,-556 245.5,-556 245.5,-556 239.5,-556 233.5,-550 233.5,-544 233.5,-544 233.5,-504 233.5,-504 233.5,-498 239.5,-492 245.5,-492 245.5,-492 375.5,-492 375.5,-492 381.5,-492 387.5,-498 387.5,-504 387.5,-504 387.5,-544 387.5,-544 387.5,-550 381.5,-556 375.5,-556"/>
 <text text-anchor="start" x="244.5" y="-534.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">wethyd_us_comb</text>
 <text text-anchor="start" x="292.5" y="-506.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">tuple</text>
 </g>
-<!-- break_us_distances -->
-<g id="node2" class="node">
-<title>break_us_distances</title>
-<path fill="#ffc857" stroke="black" d="M590,-453C590,-453 440,-453 440,-453 434,-453 428,-447 428,-441 428,-441 428,-401 428,-401 428,-395 434,-389 440,-389 440,-389 590,-389 590,-389 596,-389 602,-395 602,-401 602,-401 602,-441 602,-441 602,-447 596,-453 590,-453"/>
-<text text-anchor="start" x="439" y="-431.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">break_us_distances</text>
-<text text-anchor="start" x="476.5" y="-403.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">DataFrame</text>
-</g>
-<!-- ts_hyd_us -->
-<g id="node3" class="node">
-<title>ts_hyd_us</title>
-<path fill="#b4d8e4" stroke="black" d="M135,-146C135,-146 61,-146 61,-146 55,-146 49,-140 49,-134 49,-134 49,-94 49,-94 49,-88 55,-82 61,-82 61,-82 135,-82 135,-82 141,-82 147,-88 147,-94 147,-94 147,-134 147,-134 147,-140 141,-146 135,-146"/>
-<text text-anchor="start" x="60" y="-124.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">ts_hyd_us</text>
-<text text-anchor="start" x="88.5" y="-96.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">str</text>
+<!-- ts_hyd_us_comb&#45;&gt;wethyd_us_comb -->
+<g id="edge6" class="edge">
+<title>ts_hyd_us_comb&#45;&gt;wethyd_us_comb</title>
+<path fill="none" stroke="black" d="M171.15,-524C187.96,-524 206.03,-524 223.38,-524"/>
+<polygon fill="black" stroke="black" points="223.5,-527.5 233.5,-524 223.5,-520.5 223.5,-527.5"/>
 </g>
 <!-- wethyd_us_prof -->
-<g id="node4" class="node">
+<g id="node2" class="node">
 <title>wethyd_us_prof</title>
 <path fill="#ffc857" stroke="black" d="M370.5,-228C370.5,-228 250.5,-228 250.5,-228 244.5,-228 238.5,-222 238.5,-216 238.5,-216 238.5,-176 238.5,-176 238.5,-170 244.5,-164 250.5,-164 250.5,-164 370.5,-164 370.5,-164 376.5,-164 382.5,-170 382.5,-176 382.5,-176 382.5,-216 382.5,-216 382.5,-222 376.5,-228 370.5,-228"/>
 <text text-anchor="start" x="249.5" y="-206.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">wethyd_us_prof</text>
 <text text-anchor="start" x="272" y="-178.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">DataFrame</text>
 </g>
-<!-- ts_hyd_us&#45;&gt;wethyd_us_prof -->
-<g id="edge6" class="edge">
-<title>ts_hyd_us&#45;&gt;wethyd_us_prof</title>
-<path fill="none" stroke="black" d="M147.03,-132.71C171.13,-142.1 200.97,-153.72 228.48,-164.44"/>
-<polygon fill="black" stroke="black" points="227.51,-167.82 238.1,-168.19 230.05,-161.3 227.51,-167.82"/>
+<!-- envs -->
+<g id="node3" class="node">
+<title>envs</title>
+<path fill="#ffc857" stroke="black" d="M115.5,-638C115.5,-638 80.5,-638 80.5,-638 74.5,-638 68.5,-632 68.5,-626 68.5,-626 68.5,-586 68.5,-586 68.5,-580 74.5,-574 80.5,-574 80.5,-574 115.5,-574 115.5,-574 121.5,-574 127.5,-580 127.5,-586 127.5,-586 127.5,-626 127.5,-626 127.5,-632 121.5,-638 115.5,-638"/>
+<text text-anchor="start" x="79.5" y="-616.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">envs</text>
+<text text-anchor="start" x="87.5" y="-588.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">list</text>
+</g>
+<!-- parameters -->
+<g id="node16" class="node">
+<title>parameters</title>
+<path fill="#ffc857" stroke="black" d="M355.5,-638C355.5,-638 265.5,-638 265.5,-638 259.5,-638 253.5,-632 253.5,-626 253.5,-626 253.5,-586 253.5,-586 253.5,-580 259.5,-574 265.5,-574 265.5,-574 355.5,-574 355.5,-574 361.5,-574 367.5,-580 367.5,-586 367.5,-586 367.5,-626 367.5,-626 367.5,-632 361.5,-638 355.5,-638"/>
+<text text-anchor="start" x="264.5" y="-616.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">parameters</text>
+<text text-anchor="start" x="272" y="-588.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">DataFrame</text>
+</g>
+<!-- envs&#45;&gt;parameters -->
+<g id="edge15" class="edge">
+<title>envs&#45;&gt;parameters</title>
+<path fill="none" stroke="black" d="M127.83,-606C157.39,-606 204.4,-606 243.2,-606"/>
+<polygon fill="black" stroke="black" points="243.38,-609.5 253.38,-606 243.38,-602.5 243.38,-609.5"/>
+</g>
+<!-- ts_break_us -->
+<g id="node4" class="node">
+<title>ts_break_us</title>
+<path fill="#b4d8e4" stroke="black" d="M143,-884C143,-884 53,-884 53,-884 47,-884 41,-878 41,-872 41,-872 41,-832 41,-832 41,-826 47,-820 53,-820 53,-820 143,-820 143,-820 149,-820 155,-826 155,-832 155,-832 155,-872 155,-872 155,-878 149,-884 143,-884"/>
+<text text-anchor="start" x="52" y="-862.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">ts_break_us</text>
+<text text-anchor="start" x="88.5" y="-834.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">str</text>
+</g>
+<!-- wetbreak_us -->
+<g id="node12" class="node">
+<title>wetbreak_us</title>
+<path fill="#ffc857" stroke="black" d="M359.5,-864C359.5,-864 261.5,-864 261.5,-864 255.5,-864 249.5,-858 249.5,-852 249.5,-852 249.5,-812 249.5,-812 249.5,-806 255.5,-800 261.5,-800 261.5,-800 359.5,-800 359.5,-800 365.5,-800 371.5,-806 371.5,-812 371.5,-812 371.5,-852 371.5,-852 371.5,-858 365.5,-864 359.5,-864"/>
+<text text-anchor="start" x="260.5" y="-842.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">wetbreak_us</text>
+<text text-anchor="start" x="292.5" y="-814.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">tuple</text>
+</g>
+<!-- ts_break_us&#45;&gt;wetbreak_us -->
+<g id="edge12" class="edge">
+<title>ts_break_us&#45;&gt;wetbreak_us</title>
+<path fill="none" stroke="black" d="M155.13,-846.67C180.94,-844.21 211.84,-841.28 239.18,-838.68"/>
+<polygon fill="black" stroke="black" points="239.84,-842.13 249.47,-837.7 239.18,-835.17 239.84,-842.13"/>
+</g>
+<!-- ts_break_us_comb -->
+<g id="node5" class="node">
+<title>ts_break_us_comb</title>
+<path fill="#b4d8e4" stroke="black" d="M167.5,-720C167.5,-720 28.5,-720 28.5,-720 22.5,-720 16.5,-714 16.5,-708 16.5,-708 16.5,-668 16.5,-668 16.5,-662 22.5,-656 28.5,-656 28.5,-656 167.5,-656 167.5,-656 173.5,-656 179.5,-662 179.5,-668 179.5,-668 179.5,-708 179.5,-708 179.5,-714 173.5,-720 167.5,-720"/>
+<text text-anchor="start" x="27.5" y="-698.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">ts_break_us_comb</text>
+<text text-anchor="start" x="88.5" y="-670.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">str</text>
+</g>
+<!-- wetbreak_us_comb -->
+<g id="node11" class="node">
+<title>wetbreak_us_comb</title>
+<path fill="#ffc857" stroke="black" d="M383.5,-741C383.5,-741 237.5,-741 237.5,-741 231.5,-741 225.5,-735 225.5,-729 225.5,-729 225.5,-689 225.5,-689 225.5,-683 231.5,-677 237.5,-677 237.5,-677 383.5,-677 383.5,-677 389.5,-677 395.5,-683 395.5,-689 395.5,-689 395.5,-729 395.5,-729 395.5,-735 389.5,-741 383.5,-741"/>
+<text text-anchor="start" x="236.5" y="-719.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">wetbreak_us_comb</text>
+<text text-anchor="start" x="292.5" y="-691.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">tuple</text>
+</g>
+<!-- ts_break_us_comb&#45;&gt;wetbreak_us_comb -->
+<g id="edge10" class="edge">
+<title>ts_break_us_comb&#45;&gt;wetbreak_us_comb</title>
+<path fill="none" stroke="black" d="M179.78,-696.06C191.35,-697.21 203.34,-698.41 215.14,-699.59"/>
+<polygon fill="black" stroke="black" points="215.15,-703.1 225.44,-700.61 215.84,-696.14 215.15,-703.1"/>
+</g>
+<!-- example_equilibration -->
+<g id="node6" class="node">
+<title>example_equilibration</title>
+<path fill="#ffc857" stroke="black" d="M184,-966C184,-966 12,-966 12,-966 6,-966 0,-960 0,-954 0,-954 0,-914 0,-914 0,-908 6,-902 12,-902 12,-902 184,-902 184,-902 190,-902 196,-908 196,-914 196,-914 196,-954 196,-954 196,-960 190,-966 184,-966"/>
+<text text-anchor="start" x="11" y="-944.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">example_equilibration</text>
+<text text-anchor="start" x="59.5" y="-916.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">DataFrame</text>
+</g>
+<!-- wethyd_us_energies -->
+<g id="node7" class="node">
+<title>wethyd_us_energies</title>
+<path fill="#ffc857" stroke="black" d="M593,-453C593,-453 437,-453 437,-453 431,-453 425,-447 425,-441 425,-441 425,-401 425,-401 425,-395 431,-389 437,-389 437,-389 593,-389 593,-389 599,-389 605,-395 605,-401 605,-401 605,-441 605,-441 605,-447 599,-453 593,-453"/>
+<text text-anchor="start" x="436" y="-431.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">wethyd_us_energies</text>
+<text text-anchor="start" x="476.5" y="-403.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">DataFrame</text>
+</g>
+<!-- ts_break_protons -->
+<g id="node8" class="node">
+<title>ts_break_protons</title>
+<path fill="#b4d8e4" stroke="black" d="M377,-392C377,-392 244,-392 244,-392 238,-392 232,-386 232,-380 232,-380 232,-340 232,-340 232,-334 238,-328 244,-328 244,-328 377,-328 377,-328 383,-328 389,-334 389,-340 389,-340 389,-380 389,-380 389,-386 383,-392 377,-392"/>
+<text text-anchor="start" x="243" y="-370.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">ts_break_protons</text>
+<text text-anchor="start" x="301" y="-342.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">str</text>
+</g>
+<!-- break_us_protons -->
+<g id="node15" class="node">
+<title>break_us_protons</title>
+<path fill="#ffc857" stroke="black" d="M583,-330C583,-330 447,-330 447,-330 441,-330 435,-324 435,-318 435,-318 435,-278 435,-278 435,-272 441,-266 447,-266 447,-266 583,-266 583,-266 589,-266 595,-272 595,-278 595,-278 595,-318 595,-318 595,-324 589,-330 583,-330"/>
+<text text-anchor="start" x="446" y="-308.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">break_us_protons</text>
+<text text-anchor="start" x="476.5" y="-280.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">DataFrame</text>
+</g>
+<!-- ts_break_protons&#45;&gt;break_us_protons -->
+<g id="edge14" class="edge">
+<title>ts_break_protons&#45;&gt;break_us_protons</title>
+<path fill="none" stroke="black" d="M389.21,-336.21C401.01,-332.6 413.25,-328.85 425.26,-325.17"/>
+<polygon fill="black" stroke="black" points="426.28,-328.52 434.82,-322.24 424.23,-321.82 426.28,-328.52"/>
 </g>
 <!-- wethyd_us_hist -->
-<g id="node6" class="node">
+<g id="node10" class="node">
 <title>wethyd_us_hist</title>
 <path fill="#ffc857" stroke="black" d="M369,-146C369,-146 252,-146 252,-146 246,-146 240,-140 240,-134 240,-134 240,-94 240,-94 240,-88 246,-82 252,-82 252,-82 369,-82 369,-82 375,-82 381,-88 381,-94 381,-94 381,-134 381,-134 381,-140 375,-146 369,-146"/>
 <text text-anchor="start" x="251" y="-124.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">wethyd_us_hist</text>
 <text text-anchor="start" x="272" y="-96.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">DataFrame</text>
 </g>
-<!-- ts_hyd_us&#45;&gt;wethyd_us_hist -->
-<g id="edge8" class="edge">
-<title>ts_hyd_us&#45;&gt;wethyd_us_hist</title>
-<path fill="none" stroke="black" d="M147.03,-114C171.45,-114 201.78,-114 229.6,-114"/>
-<polygon fill="black" stroke="black" points="229.72,-117.5 239.72,-114 229.72,-110.5 229.72,-117.5"/>
-</g>
 <!-- wethyd_choices -->
-<g id="node5" class="node">
+<g id="node13" class="node">
 <title>wethyd_choices</title>
 <path fill="#ffc857" stroke="black" d="M159,-269C159,-269 37,-269 37,-269 31,-269 25,-263 25,-257 25,-257 25,-217 25,-217 25,-211 31,-205 37,-205 37,-205 159,-205 159,-205 165,-205 171,-211 171,-217 171,-217 171,-257 171,-257 171,-263 165,-269 159,-269"/>
 <text text-anchor="start" x="36" y="-247.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">wethyd_choices</text>
 <text text-anchor="start" x="59.5" y="-219.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">DataFrame</text>
 </g>
-<!-- wethyd_choices&#45;&gt;wethyd_us_comb -->
-<g id="edge1" class="edge">
-<title>wethyd_choices&#45;&gt;wethyd_us_comb</title>
-<path fill="none" stroke="black" d="M108.19,-269.36C124.21,-320.64 161.73,-421.08 225,-483 225.92,-483.9 226.86,-484.78 227.82,-485.65"/>
-<polygon fill="black" stroke="black" points="225.61,-488.36 235.58,-491.96 230.03,-482.93 225.61,-488.36"/>
-</g>
 <!-- wethyd_choices&#45;&gt;wethyd_us_prof -->
-<g id="edge5" class="edge">
+<g id="edge1" class="edge">
 <title>wethyd_choices&#45;&gt;wethyd_us_prof</title>
 <path fill="none" stroke="black" d="M171.15,-222.95C189.51,-219.37 209.37,-215.5 228.15,-211.84"/>
 <polygon fill="black" stroke="black" points="229.01,-215.24 238.16,-209.9 227.68,-208.37 229.01,-215.24"/>
+</g>
+<!-- wethyd_choices&#45;&gt;wethyd_us_comb -->
+<g id="edge5" class="edge">
+<title>wethyd_choices&#45;&gt;wethyd_us_comb</title>
+<path fill="none" stroke="black" d="M108.19,-269.36C124.21,-320.64 161.73,-421.08 225,-483 225.92,-483.9 226.86,-484.78 227.82,-485.65"/>
+<polygon fill="black" stroke="black" points="225.61,-488.36 235.58,-491.96 230.03,-482.93 225.61,-488.36"/>
 </g>
 <!-- wethyd_choices&#45;&gt;wethyd_us_hist -->
 <g id="edge7" class="edge">
@@ -99,175 +180,94 @@
 <path fill="none" stroke="black" d="M171.15,-251.05C194.37,-255.58 219.99,-260.57 242.8,-265.01"/>
 <polygon fill="black" stroke="black" points="242.24,-268.47 252.73,-266.94 243.58,-261.59 242.24,-268.47"/>
 </g>
-<!-- wetbreak_choices -->
-<g id="node7" class="node">
-<title>wetbreak_choices</title>
-<path fill="#b4d8e4" stroke="black" d="M167,-720C167,-720 29,-720 29,-720 23,-720 17,-714 17,-708 17,-708 17,-668 17,-668 17,-662 23,-656 29,-656 29,-656 167,-656 167,-656 173,-656 179,-662 179,-668 179,-668 179,-708 179,-708 179,-714 173,-720 167,-720"/>
-<text text-anchor="start" x="28" y="-698.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">wetbreak_choices</text>
-<text text-anchor="start" x="59.5" y="-670.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">DataFrame</text>
-</g>
-<!-- wetbreak_us -->
+<!-- ts_hyd_us -->
 <g id="node14" class="node">
-<title>wetbreak_us</title>
-<path fill="#ffc857" stroke="black" d="M359.5,-782C359.5,-782 261.5,-782 261.5,-782 255.5,-782 249.5,-776 249.5,-770 249.5,-770 249.5,-730 249.5,-730 249.5,-724 255.5,-718 261.5,-718 261.5,-718 359.5,-718 359.5,-718 365.5,-718 371.5,-724 371.5,-730 371.5,-730 371.5,-770 371.5,-770 371.5,-776 365.5,-782 359.5,-782"/>
-<text text-anchor="start" x="260.5" y="-760.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">wetbreak_us</text>
-<text text-anchor="start" x="292.5" y="-732.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">tuple</text>
+<title>ts_hyd_us</title>
+<path fill="#b4d8e4" stroke="black" d="M135,-146C135,-146 61,-146 61,-146 55,-146 49,-140 49,-134 49,-134 49,-94 49,-94 49,-88 55,-82 61,-82 61,-82 135,-82 135,-82 141,-82 147,-88 147,-94 147,-94 147,-134 147,-134 147,-140 141,-146 135,-146"/>
+<text text-anchor="start" x="60" y="-124.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">ts_hyd_us</text>
+<text text-anchor="start" x="88.5" y="-96.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">str</text>
 </g>
-<!-- wetbreak_choices&#45;&gt;wetbreak_us -->
-<g id="edge12" class="edge">
-<title>wetbreak_choices&#45;&gt;wetbreak_us</title>
-<path fill="none" stroke="black" d="M179.18,-711.62C199.06,-717.47 220.21,-723.7 239.55,-729.4"/>
-<polygon fill="black" stroke="black" points="238.61,-732.77 249.19,-732.24 240.58,-726.05 238.61,-732.77"/>
-</g>
-<!-- wetbreak_us_comb -->
-<g id="node15" class="node">
-<title>wetbreak_us_comb</title>
-<path fill="#ffc857" stroke="black" d="M383.5,-659C383.5,-659 237.5,-659 237.5,-659 231.5,-659 225.5,-653 225.5,-647 225.5,-647 225.5,-607 225.5,-607 225.5,-601 231.5,-595 237.5,-595 237.5,-595 383.5,-595 383.5,-595 389.5,-595 395.5,-601 395.5,-607 395.5,-607 395.5,-647 395.5,-647 395.5,-653 389.5,-659 383.5,-659"/>
-<text text-anchor="start" x="236.5" y="-637.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">wetbreak_us_comb</text>
-<text text-anchor="start" x="292.5" y="-609.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">tuple</text>
-</g>
-<!-- wetbreak_choices&#45;&gt;wetbreak_us_comb -->
-<g id="edge14" class="edge">
-<title>wetbreak_choices&#45;&gt;wetbreak_us_comb</title>
-<path fill="none" stroke="black" d="M179.18,-664.76C191.1,-661.31 203.47,-657.73 215.64,-654.2"/>
-<polygon fill="black" stroke="black" points="216.71,-657.53 225.34,-651.39 214.76,-650.81 216.71,-657.53"/>
-</g>
-<!-- ts_hyd_us_comb -->
-<g id="node8" class="node">
-<title>ts_hyd_us_comb</title>
-<path fill="#b4d8e4" stroke="black" d="M159,-556C159,-556 37,-556 37,-556 31,-556 25,-550 25,-544 25,-544 25,-504 25,-504 25,-498 31,-492 37,-492 37,-492 159,-492 159,-492 165,-492 171,-498 171,-504 171,-504 171,-544 171,-544 171,-550 165,-556 159,-556"/>
-<text text-anchor="start" x="36" y="-534.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">ts_hyd_us_comb</text>
-<text text-anchor="start" x="88.5" y="-506.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">str</text>
-</g>
-<!-- ts_hyd_us_comb&#45;&gt;wethyd_us_comb -->
+<!-- ts_hyd_us&#45;&gt;wethyd_us_prof -->
 <g id="edge2" class="edge">
-<title>ts_hyd_us_comb&#45;&gt;wethyd_us_comb</title>
-<path fill="none" stroke="black" d="M171.15,-524C187.96,-524 206.03,-524 223.38,-524"/>
-<polygon fill="black" stroke="black" points="223.5,-527.5 233.5,-524 223.5,-520.5 223.5,-527.5"/>
+<title>ts_hyd_us&#45;&gt;wethyd_us_prof</title>
+<path fill="none" stroke="black" d="M147.03,-132.71C171.13,-142.1 200.97,-153.72 228.48,-164.44"/>
+<polygon fill="black" stroke="black" points="227.51,-167.82 238.1,-168.19 230.05,-161.3 227.51,-167.82"/>
 </g>
-<!-- ts_break_us -->
-<g id="node9" class="node">
-<title>ts_break_us</title>
-<path fill="#b4d8e4" stroke="black" d="M143,-802C143,-802 53,-802 53,-802 47,-802 41,-796 41,-790 41,-790 41,-750 41,-750 41,-744 47,-738 53,-738 53,-738 143,-738 143,-738 149,-738 155,-744 155,-750 155,-750 155,-790 155,-790 155,-796 149,-802 143,-802"/>
-<text text-anchor="start" x="52" y="-780.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">ts_break_us</text>
-<text text-anchor="start" x="88.5" y="-752.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">str</text>
-</g>
-<!-- ts_break_us&#45;&gt;wetbreak_us -->
-<g id="edge13" class="edge">
-<title>ts_break_us&#45;&gt;wetbreak_us</title>
-<path fill="none" stroke="black" d="M155.13,-764.67C180.94,-762.21 211.84,-759.28 239.18,-756.68"/>
-<polygon fill="black" stroke="black" points="239.84,-760.13 249.47,-755.7 239.18,-753.17 239.84,-760.13"/>
+<!-- ts_hyd_us&#45;&gt;wethyd_us_hist -->
+<g id="edge8" class="edge">
+<title>ts_hyd_us&#45;&gt;wethyd_us_hist</title>
+<path fill="none" stroke="black" d="M147.03,-114C171.45,-114 201.78,-114 229.6,-114"/>
+<polygon fill="black" stroke="black" points="229.72,-117.5 239.72,-114 229.72,-110.5 229.72,-117.5"/>
 </g>
 <!-- ts_break_distances -->
-<g id="node10" class="node">
-<title>ts_break_distances</title>
-<path fill="#b4d8e4" stroke="black" d="M384,-474C384,-474 237,-474 237,-474 231,-474 225,-468 225,-462 225,-462 225,-422 225,-422 225,-416 231,-410 237,-410 237,-410 384,-410 384,-410 390,-410 396,-416 396,-422 396,-422 396,-462 396,-462 396,-468 390,-474 384,-474"/>
-<text text-anchor="start" x="236" y="-452.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">ts_break_distances</text>
-<text text-anchor="start" x="301" y="-424.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">str</text>
-</g>
-<!-- ts_break_distances&#45;&gt;break_us_distances -->
-<g id="edge4" class="edge">
-<title>ts_break_distances&#45;&gt;break_us_distances</title>
-<path fill="none" stroke="black" d="M396.2,-433.22C403.2,-432.49 410.29,-431.75 417.36,-431.02"/>
-<polygon fill="black" stroke="black" points="418.1,-434.46 427.68,-429.95 417.37,-427.5 418.1,-434.46"/>
-</g>
-<!-- ts_break_protons -->
-<g id="node11" class="node">
-<title>ts_break_protons</title>
-<path fill="#b4d8e4" stroke="black" d="M377,-392C377,-392 244,-392 244,-392 238,-392 232,-386 232,-380 232,-380 232,-340 232,-340 232,-334 238,-328 244,-328 244,-328 377,-328 377,-328 383,-328 389,-334 389,-340 389,-340 389,-380 389,-380 389,-386 383,-392 377,-392"/>
-<text text-anchor="start" x="243" y="-370.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">ts_break_protons</text>
-<text text-anchor="start" x="301" y="-342.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">str</text>
-</g>
-<!-- break_us_protons -->
-<g id="node12" class="node">
-<title>break_us_protons</title>
-<path fill="#ffc857" stroke="black" d="M583,-330C583,-330 447,-330 447,-330 441,-330 435,-324 435,-318 435,-318 435,-278 435,-278 435,-272 441,-266 447,-266 447,-266 583,-266 583,-266 589,-266 595,-272 595,-278 595,-278 595,-318 595,-318 595,-324 589,-330 583,-330"/>
-<text text-anchor="start" x="446" y="-308.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">break_us_protons</text>
-<text text-anchor="start" x="476.5" y="-280.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">DataFrame</text>
-</g>
-<!-- ts_break_protons&#45;&gt;break_us_protons -->
-<g id="edge10" class="edge">
-<title>ts_break_protons&#45;&gt;break_us_protons</title>
-<path fill="none" stroke="black" d="M389.21,-336.21C401.01,-332.6 413.25,-328.85 425.26,-325.17"/>
-<polygon fill="black" stroke="black" points="426.28,-328.52 434.82,-322.24 424.23,-321.82 426.28,-328.52"/>
-</g>
-<!-- parameters -->
-<g id="node13" class="node">
-<title>parameters</title>
-<path fill="#ffc857" stroke="black" d="M355.5,-884C355.5,-884 265.5,-884 265.5,-884 259.5,-884 253.5,-878 253.5,-872 253.5,-872 253.5,-832 253.5,-832 253.5,-826 259.5,-820 265.5,-820 265.5,-820 355.5,-820 355.5,-820 361.5,-820 367.5,-826 367.5,-832 367.5,-832 367.5,-872 367.5,-872 367.5,-878 361.5,-884 355.5,-884"/>
-<text text-anchor="start" x="264.5" y="-862.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">parameters</text>
-<text text-anchor="start" x="272" y="-834.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">DataFrame</text>
-</g>
-<!-- ts_break_us_comb -->
-<g id="node16" class="node">
-<title>ts_break_us_comb</title>
-<path fill="#b4d8e4" stroke="black" d="M167.5,-638C167.5,-638 28.5,-638 28.5,-638 22.5,-638 16.5,-632 16.5,-626 16.5,-626 16.5,-586 16.5,-586 16.5,-580 22.5,-574 28.5,-574 28.5,-574 167.5,-574 167.5,-574 173.5,-574 179.5,-580 179.5,-586 179.5,-586 179.5,-626 179.5,-626 179.5,-632 173.5,-638 167.5,-638"/>
-<text text-anchor="start" x="27.5" y="-616.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">ts_break_us_comb</text>
-<text text-anchor="start" x="88.5" y="-588.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">str</text>
-</g>
-<!-- ts_break_us_comb&#45;&gt;wetbreak_us_comb -->
-<g id="edge15" class="edge">
-<title>ts_break_us_comb&#45;&gt;wetbreak_us_comb</title>
-<path fill="none" stroke="black" d="M179.78,-614.06C191.35,-615.21 203.34,-616.41 215.14,-617.59"/>
-<polygon fill="black" stroke="black" points="215.15,-621.1 225.44,-618.61 215.84,-614.14 215.15,-621.1"/>
-</g>
-<!-- ts_hyd_energies -->
 <g id="node17" class="node">
-<title>ts_hyd_energies</title>
-<path fill="#b4d8e4" stroke="black" d="M372.5,-64C372.5,-64 248.5,-64 248.5,-64 242.5,-64 236.5,-58 236.5,-52 236.5,-52 236.5,-12 236.5,-12 236.5,-6 242.5,0 248.5,0 248.5,0 372.5,0 372.5,0 378.5,0 384.5,-6 384.5,-12 384.5,-12 384.5,-52 384.5,-52 384.5,-58 378.5,-64 372.5,-64"/>
-<text text-anchor="start" x="247.5" y="-42.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">ts_hyd_energies</text>
+<title>ts_break_distances</title>
+<path fill="#b4d8e4" stroke="black" d="M384,-64C384,-64 237,-64 237,-64 231,-64 225,-58 225,-52 225,-52 225,-12 225,-12 225,-6 231,0 237,0 237,0 384,0 384,0 390,0 396,-6 396,-12 396,-12 396,-52 396,-52 396,-58 390,-64 384,-64"/>
+<text text-anchor="start" x="236" y="-42.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">ts_break_distances</text>
 <text text-anchor="start" x="301" y="-14.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">str</text>
 </g>
-<!-- wethyd_us_energies -->
+<!-- break_us_distances -->
 <g id="node19" class="node">
-<title>wethyd_us_energies</title>
-<path fill="#ffc857" stroke="black" d="M593,-166C593,-166 437,-166 437,-166 431,-166 425,-160 425,-154 425,-154 425,-114 425,-114 425,-108 431,-102 437,-102 437,-102 593,-102 593,-102 599,-102 605,-108 605,-114 605,-114 605,-154 605,-154 605,-160 599,-166 593,-166"/>
-<text text-anchor="start" x="436" y="-144.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">wethyd_us_energies</text>
+<title>break_us_distances</title>
+<path fill="#ffc857" stroke="black" d="M590,-166C590,-166 440,-166 440,-166 434,-166 428,-160 428,-154 428,-154 428,-114 428,-114 428,-108 434,-102 440,-102 440,-102 590,-102 590,-102 596,-102 602,-108 602,-114 602,-114 602,-154 602,-154 602,-160 596,-166 590,-166"/>
+<text text-anchor="start" x="439" y="-144.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">break_us_distances</text>
 <text text-anchor="start" x="476.5" y="-116.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">DataFrame</text>
 </g>
-<!-- ts_hyd_energies&#45;&gt;wethyd_us_energies -->
+<!-- ts_break_distances&#45;&gt;break_us_distances -->
 <g id="edge18" class="edge">
-<title>ts_hyd_energies&#45;&gt;wethyd_us_energies</title>
+<title>ts_break_distances&#45;&gt;break_us_distances</title>
 <path fill="none" stroke="black" d="M378,-64.07C384.1,-67.07 390.17,-70.08 396,-73 411.43,-80.73 427.91,-89.15 443.53,-97.2"/>
 <polygon fill="black" stroke="black" points="442.11,-100.41 452.6,-101.89 445.32,-94.19 442.11,-100.41"/>
 </g>
-<!-- frame_cwds&#45;&gt;break_us_distances -->
+<!-- frame_cwds&#45;&gt;wethyd_us_energies -->
 <g id="edge3" class="edge">
-<title>frame_cwds&#45;&gt;break_us_distances</title>
+<title>frame_cwds&#45;&gt;wethyd_us_energies</title>
 <path fill="none" stroke="black" d="M368.09,-302.91C377.64,-307.83 387.28,-313.26 396,-319 423.72,-337.25 451.94,-361.4 473.83,-381.62"/>
 <polygon fill="black" stroke="black" points="471.6,-384.33 481.3,-388.59 476.38,-379.21 471.6,-384.33"/>
 </g>
 <!-- frame_cwds&#45;&gt;break_us_protons -->
-<g id="edge9" class="edge">
+<g id="edge13" class="edge">
 <title>frame_cwds&#45;&gt;break_us_protons</title>
 <path fill="none" stroke="black" d="M368.18,-283.6C385.71,-285.33 405.48,-287.28 424.66,-289.18"/>
 <polygon fill="black" stroke="black" points="424.33,-292.66 434.63,-290.16 425.02,-285.69 424.33,-292.66"/>
 </g>
-<!-- frame_cwds&#45;&gt;wethyd_us_energies -->
+<!-- frame_cwds&#45;&gt;break_us_distances -->
 <g id="edge17" class="edge">
-<title>frame_cwds&#45;&gt;wethyd_us_energies</title>
+<title>frame_cwds&#45;&gt;break_us_distances</title>
 <path fill="none" stroke="black" d="M368.11,-253.13C377.67,-248.2 387.3,-242.76 396,-237 423.99,-218.47 452.43,-193.86 474.37,-173.35"/>
 <polygon fill="black" stroke="black" points="476.98,-175.69 481.85,-166.28 472.17,-170.6 476.98,-175.69"/>
 </g>
-<!-- envs -->
+<!-- wetbreak_choices -->
 <g id="node20" class="node">
-<title>envs</title>
-<path fill="#ffc857" stroke="black" d="M115.5,-884C115.5,-884 80.5,-884 80.5,-884 74.5,-884 68.5,-878 68.5,-872 68.5,-872 68.5,-832 68.5,-832 68.5,-826 74.5,-820 80.5,-820 80.5,-820 115.5,-820 115.5,-820 121.5,-820 127.5,-826 127.5,-832 127.5,-832 127.5,-872 127.5,-872 127.5,-878 121.5,-884 115.5,-884"/>
-<text text-anchor="start" x="79.5" y="-862.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">envs</text>
-<text text-anchor="start" x="87.5" y="-834.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">list</text>
+<title>wetbreak_choices</title>
+<path fill="#b4d8e4" stroke="black" d="M167,-802C167,-802 29,-802 29,-802 23,-802 17,-796 17,-790 17,-790 17,-750 17,-750 17,-744 23,-738 29,-738 29,-738 167,-738 167,-738 173,-738 179,-744 179,-750 179,-750 179,-790 179,-790 179,-796 173,-802 167,-802"/>
+<text text-anchor="start" x="28" y="-780.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">wetbreak_choices</text>
+<text text-anchor="start" x="59.5" y="-752.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">DataFrame</text>
 </g>
-<!-- envs&#45;&gt;parameters -->
+<!-- wetbreak_choices&#45;&gt;wetbreak_us_comb -->
+<g id="edge9" class="edge">
+<title>wetbreak_choices&#45;&gt;wetbreak_us_comb</title>
+<path fill="none" stroke="black" d="M179.18,-746.76C191.1,-743.31 203.47,-739.73 215.64,-736.2"/>
+<polygon fill="black" stroke="black" points="216.71,-739.53 225.34,-733.39 214.76,-732.81 216.71,-739.53"/>
+</g>
+<!-- wetbreak_choices&#45;&gt;wetbreak_us -->
 <g id="edge11" class="edge">
-<title>envs&#45;&gt;parameters</title>
-<path fill="none" stroke="black" d="M127.83,-852C157.39,-852 204.4,-852 243.2,-852"/>
-<polygon fill="black" stroke="black" points="243.38,-855.5 253.38,-852 243.38,-848.5 243.38,-855.5"/>
+<title>wetbreak_choices&#45;&gt;wetbreak_us</title>
+<path fill="none" stroke="black" d="M179.18,-793.62C199.06,-799.47 220.21,-805.7 239.55,-811.4"/>
+<polygon fill="black" stroke="black" points="238.61,-814.77 249.19,-814.24 240.58,-808.05 238.61,-814.77"/>
 </g>
-<!-- example_equilibration -->
+<!-- ts_hyd_energies -->
 <g id="node21" class="node">
-<title>example_equilibration</title>
-<path fill="#ffc857" stroke="black" d="M184,-966C184,-966 12,-966 12,-966 6,-966 0,-960 0,-954 0,-954 0,-914 0,-914 0,-908 6,-902 12,-902 12,-902 184,-902 184,-902 190,-902 196,-908 196,-914 196,-914 196,-954 196,-954 196,-960 190,-966 184,-966"/>
-<text text-anchor="start" x="11" y="-944.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">example_equilibration</text>
-<text text-anchor="start" x="59.5" y="-916.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">DataFrame</text>
+<title>ts_hyd_energies</title>
+<path fill="#b4d8e4" stroke="black" d="M372.5,-474C372.5,-474 248.5,-474 248.5,-474 242.5,-474 236.5,-468 236.5,-462 236.5,-462 236.5,-422 236.5,-422 236.5,-416 242.5,-410 248.5,-410 248.5,-410 372.5,-410 372.5,-410 378.5,-410 384.5,-416 384.5,-422 384.5,-422 384.5,-462 384.5,-462 384.5,-468 378.5,-474 372.5,-474"/>
+<text text-anchor="start" x="247.5" y="-452.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">ts_hyd_energies</text>
+<text text-anchor="start" x="301" y="-424.8" font-family="Helvetica,sans-Serif" font-style="italic" font-size="14.00">str</text>
+</g>
+<!-- ts_hyd_energies&#45;&gt;wethyd_us_energies -->
+<g id="edge4" class="edge">
+<title>ts_hyd_energies&#45;&gt;wethyd_us_energies</title>
+<path fill="none" stroke="black" d="M384.61,-434.42C394.38,-433.41 404.53,-432.35 414.65,-431.3"/>
+<polygon fill="black" stroke="black" points="415.17,-434.77 424.76,-430.25 414.45,-427.81 415.17,-434.77"/>
 </g>
 <!-- function -->
 <g id="node22" class="node">

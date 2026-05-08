@@ -456,8 +456,8 @@ def tiprot_plot(df: pd.DataFrame, include_N: bool=False) -> ggplot:
 
 ```{python}
 p: ggplot = tiprot_plot(tiprots_raw)
-# p.save("./plots/wethyd_us_tiprots_no_filter.png", dpi=DPI, width=double_column, height=double_column*0.75)
-# p.save("./plots/wethyd_us_tiprots_no_filter.svg", dpi=DPI, width=double_column, height=double_column*0.75)
+p.save("./plots/wethyd_us_tiprots_no_filter.png", dpi=DPI, width=double_column, height=double_column*0.75)
+p.save("./plots/wethyd_us_tiprots_no_filter.svg", dpi=DPI, width=double_column, height=double_column*0.75)
 p.show()
 ```
 
@@ -493,8 +493,8 @@ tiprots['label'] = r"$\text{n}_{\text{H}^+}$ at " + tiprots['type'].astype(str)
 
 ```{python}
 p = tiprot_plot(tiprots)
-# p.save("./plots/wethyd_us_tiprots_filtered.png", dpi=DPI, width=double_column, height=double_column*0.75)
-# p.save("./plots/wethyd_us_tiprots_filtered.svg", dpi=DPI, width=double_column, height=double_column*0.75)
+p.save("./plots/wethyd_us_tiprots_filtered.png", dpi=DPI, width=double_column, height=double_column*0.75)
+p.save("./plots/wethyd_us_tiprots_filtered.svg", dpi=DPI, width=double_column, height=double_column*0.75)
 p.show()
 ```
 
@@ -502,6 +502,8 @@ Including N:
 
 ```{python}
 p: ggplot = tiprot_plot(df=tiprots, include_N=True)
+p.save("./plots/wethyd_us_tiprots_filtered_n.png", dpi=DPI, width=double_column, height=double_column*0.75)
+p.save("./plots/wethyd_us_tiprots_filtered_n.svg", dpi=DPI, width=double_column, height=double_column*0.75)
 p.show()
 ```
 
@@ -513,7 +515,6 @@ p.save("./plots/wethyd_us_tiprots_filtered_example.png", dpi=DPI, width=single_c
 p.save("./plots/wethyd_us_tiprots_filtered_example.svg", dpi=DPI, width=single_column, height=single_column*0.75)
 p.show()
 ```
-
 
 ### Combined Protonation Single vs Triple
 
